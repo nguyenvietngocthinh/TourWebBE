@@ -4,6 +4,7 @@ import com.iuh.TourBooking.models.User;
 import com.iuh.TourBooking.models.dto.request.UserCreateRequest;
 import com.iuh.TourBooking.models.dto.request.UserUpdateRequest;
 import com.iuh.TourBooking.service.UserService;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -31,14 +32,29 @@ public class UserController{
         return userService.getUserByPhoneNumber(phoneNumber);
     }
 
+    @GetMapping("/id/{userId}")
+    private User getUserByUserID(@PathVariable("userId") ObjectId userId) {
+        return userService.getUserByUserId(userId);
+    }
+
     @PutMapping("{phoneNumber}")
-    private User updateUser(@PathVariable String phoneNumber ,@RequestBody UserUpdateRequest userUpdateRequest) {
+    private User updateUserByPhoneNumber(@PathVariable String phoneNumber ,@RequestBody UserUpdateRequest userUpdateRequest) {
         return userService.updateUserByPhoneNumber(phoneNumber, userUpdateRequest);
+    }
+    @PutMapping("/id/{userId}")
+    private User updateUserByUserId(@PathVariable ObjectId userId ,@RequestBody UserUpdateRequest userUpdateRequest) {
+        return userService.updateUserByUserId(userId, userUpdateRequest);
     }
 
     @DeleteMapping("{phoneNumber}")
-    private String deleteUser(@PathVariable String phoneNumber) {
+    private String deleteUserByPhoneNumber(@PathVariable String phoneNumber) {
         userService.deleteUserByPhoneNumber(phoneNumber);
+        return "Delete success";
+    }
+
+    @DeleteMapping("/id/{userId}")
+    private String deleteUserByUserId(@PathVariable ObjectId userId){
+        userService.deleteUserByUserId(userId);
         return "Delete success";
     }
 }
