@@ -20,7 +20,13 @@ public class UserServiceImpl implements UserService {
     public User createUser(UserCreateRequest userCreateRequest) {
         User user = new User();
 
-        user.setPhoneNumber(userCreateRequest.getPhoneNumber());
+        if (userRepository.existsByPhoneNumber(userCreateRequest.getPhoneNumber())) {
+            throw new RuntimeException("Phone number already exists");
+        } else {
+            user.setPhoneNumber(userCreateRequest.getPhoneNumber());
+        }
+
+
         user.setPassword(userCreateRequest.getPassword());
         user.setUsername(userCreateRequest.getUsername());
         user.setEmail(userCreateRequest.getEmail());

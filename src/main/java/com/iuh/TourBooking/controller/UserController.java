@@ -4,6 +4,7 @@ import com.iuh.TourBooking.models.User;
 import com.iuh.TourBooking.models.dto.request.UserCreateRequest;
 import com.iuh.TourBooking.models.dto.request.UserUpdateRequest;
 import com.iuh.TourBooking.service.UserService;
+import jakarta.validation.Valid;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,7 +19,7 @@ public class UserController{
     private UserService userService;
 
     @PostMapping
-    private User createUser(@RequestBody UserCreateRequest userCreateRequest) {
+    private User createUser(@RequestBody @Valid UserCreateRequest userCreateRequest) {
         return userService.createUser(userCreateRequest);
     }
 
