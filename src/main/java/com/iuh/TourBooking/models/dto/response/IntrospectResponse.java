@@ -1,4 +1,4 @@
-package com.iuh.TourBooking.models.dto.request;
+package com.iuh.TourBooking.models.dto.response;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -10,6 +10,6 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class IntrospectRequest {
-    String token;
+public class IntrospectResponse {
+    boolean valid;
 }
