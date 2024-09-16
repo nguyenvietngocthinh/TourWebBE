@@ -10,6 +10,8 @@ import com.iuh.TourBooking.repository.UserRepository;
 import com.iuh.TourBooking.service.UserService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,6 +33,8 @@ public class UserServiceImpl implements UserService {
         }
 
         user = userMapper.toUser(userCreateRequest);
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+        user.setPassword(passwordEncoder.encode(userCreateRequest.getPassword()));
 
         return userRepository.save(user);
     }

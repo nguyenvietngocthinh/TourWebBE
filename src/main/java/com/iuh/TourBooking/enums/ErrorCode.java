@@ -14,6 +14,7 @@ public enum ErrorCode {
     USER_EXISTED(1002, "User existed"),
     PHONENUMBER_INVALID(1003, "Phone number must start with 0 and be 10 digits long"),
     PASSWORD_INVALID(1004, "Password must be at least 1 character long"),
+    USER_NOT_EXISTED(1005, "User not existed"),
     ;
 
     private int code;
