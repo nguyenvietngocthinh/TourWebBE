@@ -1,5 +1,8 @@
 package com.iuh.TourBooking.service.impl;
 
+import com.iuh.TourBooking.enums.ErrorCode;
+import com.iuh.TourBooking.exception.AppException;
+import com.iuh.TourBooking.mappers.UserMapper;
 import com.iuh.TourBooking.models.User;
 import com.iuh.TourBooking.models.dto.request.UserCreateRequest;
 import com.iuh.TourBooking.models.dto.request.UserUpdateRequest;
@@ -16,23 +19,18 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private UserMapper userMapper;
+
     @Override
     public User createUser(UserCreateRequest userCreateRequest) {
         User user = new User();
 
         if (userRepository.existsByPhoneNumber(userCreateRequest.getPhoneNumber())) {
-            throw new RuntimeException("Phone number already exists");
-        } else {
-            user.setPhoneNumber(userCreateRequest.getPhoneNumber());
+            throw new AppException(ErrorCode.USER_EXISTED);
         }
 
-
-        user.setPassword(userCreateRequest.getPassword());
-        user.setUsername(userCreateRequest.getUsername());
-        user.setEmail(userCreateRequest.getEmail());
-        user.setAddress(userCreateRequest.getAddress());
-        user.setGender(userCreateRequest.getGender());
-        user.setDateOfBirth(userCreateRequest.getDateOfBirth());
+        user = userMapper.toUser(userCreateRequest);
 
         return userRepository.save(user);
     }
@@ -41,12 +39,7 @@ public class UserServiceImpl implements UserService {
     public User updateUserByPhoneNumber(String phoneNumber, UserUpdateRequest userUpdateRequest) {
         User user = getUserByPhoneNumber(phoneNumber);
 
-        user.setUsername(userUpdateRequest.getUsername());
-        user.setPassword(userUpdateRequest.getPassword());
-        user.setEmail(userUpdateRequest.getEmail());
-        user.setAddress(userUpdateRequest.getAddress());
-        user.setGender(userUpdateRequest.getGender());
-        user.setDateOfBirth(userUpdateRequest.getDateOfBirth());
+        userMapper.updateUser(user, userUpdateRequest);
 
         return userRepository.save(user);
     }

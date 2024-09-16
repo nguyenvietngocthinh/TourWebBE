@@ -1,20 +1,21 @@
 package com.iuh.TourBooking.models.dto.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.util.Date;
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserUpdateRequest {
-    private String password;
-    private String username;
-    private String email;
-    private String address;
-    private Boolean gender;
-    private Date dateOfBirth;
+    String password;
+    String username;
+    String email;
+    String address;
+    Boolean gender;
+    Date dateOfBirth;
 }

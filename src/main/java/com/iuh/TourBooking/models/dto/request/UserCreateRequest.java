@@ -2,27 +2,28 @@ package com.iuh.TourBooking.models.dto.request;
 
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.util.Date;
 
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserCreateRequest {
-    @Size(min = 10, max = 10, message = "Phone number must be 10 characters")
-    @Pattern(regexp = "0\\d{9}", message = "Phone number must start with 0 and be 10 digits long")
-    private String phoneNumber;
+    @Size(min = 10, max = 10,message = "PHONENUMBER_INVALID")
+    @Pattern(regexp = "0\\d{9}",message = "PHONENUMBER_INVALID")
+    String phoneNumber;
 
-
-    private String password;
-    private String username;
-    private String email;
-    private String address;
-    private Boolean gender;
-    private Date dateOfBirth;
+    @Size(min = 1, message = "PASSWORD_INVALID")
+    String password;
+    String username;
+    String email;
+    String address;
+    Boolean gender;
+    Date dateOfBirth;
 }
