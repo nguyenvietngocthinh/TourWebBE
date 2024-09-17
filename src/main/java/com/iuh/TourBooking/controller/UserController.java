@@ -4,6 +4,7 @@ import com.iuh.TourBooking.models.User;
 import com.iuh.TourBooking.models.dto.request.UserCreateRequest;
 import com.iuh.TourBooking.models.dto.request.UserUpdateRequest;
 import com.iuh.TourBooking.models.dto.response.ApiResponse;
+import com.iuh.TourBooking.models.dto.response.UserResponse;
 import com.iuh.TourBooking.service.UserService;
 import jakarta.validation.Valid;
 import org.bson.types.ObjectId;
@@ -34,21 +35,21 @@ public class UserController{
     }
 
     @GetMapping("{phoneNumber}")
-    private User getUserByPhoneNumber (@PathVariable("phoneNumber") String phoneNumber) {
+    private UserResponse getUserByPhoneNumber (@PathVariable("phoneNumber") String phoneNumber) {
         return userService.getUserByPhoneNumber(phoneNumber);
     }
 
     @GetMapping("/id/{userId}")
-    private User getUserByUserID(@PathVariable("userId") ObjectId userId) {
+    private UserResponse getUserByUserID(@PathVariable("userId") ObjectId userId) {
         return userService.getUserByUserId(userId);
     }
 
     @PutMapping("{phoneNumber}")
-    private User updateUserByPhoneNumber(@PathVariable String phoneNumber ,@RequestBody UserUpdateRequest userUpdateRequest) {
+    private UserResponse updateUserByPhoneNumber(@PathVariable String phoneNumber ,@RequestBody UserUpdateRequest userUpdateRequest) {
         return userService.updateUserByPhoneNumber(phoneNumber, userUpdateRequest);
     }
     @PutMapping("/id/{userId}")
-    private User updateUserByUserId(@PathVariable ObjectId userId ,@RequestBody UserUpdateRequest userUpdateRequest) {
+    private UserResponse updateUserByUserId(@PathVariable ObjectId userId ,@RequestBody UserUpdateRequest userUpdateRequest) {
         return userService.updateUserByUserId(userId, userUpdateRequest);
     }
 

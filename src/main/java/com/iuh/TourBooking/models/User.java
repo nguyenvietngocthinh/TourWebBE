@@ -6,6 +6,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
+import java.util.Set;
 
 @Document(collection = "users")
 @Data
@@ -13,6 +14,7 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class User {
     @Id
     private ObjectId id;
@@ -23,6 +25,7 @@ public class User {
     private String address;
     private Boolean gender;
     private Date dateOfBirth;
+    private Set<String> roles;
     private Date createdAt = new Date();
     private Boolean isActive = true;
 
