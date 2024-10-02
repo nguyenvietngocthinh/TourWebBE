@@ -21,22 +21,36 @@ public class UserController{
     private UserService userService;
 
     @PostMapping
-    private ApiResponse<User> createUser(@RequestBody @Valid UserCreateRequest userCreateRequest) {
-        ApiResponse<User> apiResponse = new ApiResponse<>();
-
-        apiResponse.setResult(userService.createUser(userCreateRequest));
-
-        return apiResponse;
+    private ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreateRequest userCreateRequest) {
+        return ApiResponse.<UserResponse>builder()
+                .result(userService.createUser(userCreateRequest))
+                .build();
     }
 
     @GetMapping
-    private List<User> getAllUser() {
-        return userService.getAllUser();
+    ApiResponse<List<UserResponse>> getAllUsers() {
+        return ApiResponse.<List<UserResponse>>builder()
+                .result(userService.getAllUser())
+                .build();
     }
 
-    @GetMapping("{phoneNumber}")
-    private UserResponse getUserByPhoneNumber (@PathVariable("phoneNumber") String phoneNumber) {
-        return userService.getUserByPhoneNumber(phoneNumber);
+    @GetMapping("/phone/{phoneNumber}")
+    private ApiResponse<UserResponse> getUserByPhoneNumber (@PathVariable("phoneNumber") String phoneNumber) {
+        return ApiResponse.<UserResponse>builder()
+                .result(userService.getUserByPhoneNumber(phoneNumber))
+                .build();
+    }
+
+    @GetMapping("{email}")
+    private ApiResponse<UserResponse> getUserByEmail (@PathVariable("email") String email) {
+        return ApiResponse.<UserResponse>builder()
+                .result(userService.getUserByEmail(email))
+                .build();
+    }
+
+    @GetMapping("/myinfo")
+    private UserResponse getMyInfo () {
+        return userService.getMyinfo();
     }
 
     @GetMapping("/id/{userId}")
@@ -44,24 +58,39 @@ public class UserController{
         return userService.getUserByUserId(userId);
     }
 
-    @PutMapping("{phoneNumber}")
+    @PutMapping("/phone/{phoneNumber}")
     private UserResponse updateUserByPhoneNumber(@PathVariable String phoneNumber ,@RequestBody UserUpdateRequest userUpdateRequest) {
         return userService.updateUserByPhoneNumber(phoneNumber, userUpdateRequest);
     }
+
+    @PutMapping("/{email}")
+    private UserResponse updateUserByEmail(@PathVariable String email ,@RequestBody UserUpdateRequest userUpdateRequest) {
+        return userService.updateUserByEmail(email, userUpdateRequest);
+    }
+
     @PutMapping("/id/{userId}")
     private UserResponse updateUserByUserId(@PathVariable ObjectId userId ,@RequestBody UserUpdateRequest userUpdateRequest) {
         return userService.updateUserByUserId(userId, userUpdateRequest);
     }
 
-    @DeleteMapping("{phoneNumber}")
-    private String deleteUserByPhoneNumber(@PathVariable String phoneNumber) {
+    @DeleteMapping("/phone/{phoneNumber}")
+    private ApiResponse<String> deleteUserByPhoneNumber(@PathVariable String phoneNumber) {
         userService.deleteUserByPhoneNumber(phoneNumber);
-        return "Delete success";
+        return ApiResponse.<String>builder().result("User has been deleted").build();
+    }
+
+    @DeleteMapping("{admin}")
+    private ApiResponse<String> deleteUserByEmail(@PathVariable String email) {
+        if (email == "admin@gmail.com"){
+            return ApiResponse.<String>builder().result("User can not been deleted").build();
+        }
+        userService.deleteUserByEmail(email);
+        return ApiResponse.<String>builder().result("User has been deleted").build();
     }
 
     @DeleteMapping("/id/{userId}")
-    private String deleteUserByUserId(@PathVariable ObjectId userId){
+    private ApiResponse<String> deleteUserByUserId(@PathVariable ObjectId userId){
         userService.deleteUserByUserId(userId);
-        return "Delete success";
+        return ApiResponse.<String>builder().result("User has been deleted").build();
     }
 }

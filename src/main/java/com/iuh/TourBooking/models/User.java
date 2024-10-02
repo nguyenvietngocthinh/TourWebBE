@@ -18,10 +18,10 @@ import java.util.Set;
 public class User {
     @Id
     private ObjectId id;
-    private String phoneNumber;
+    private String email;
     private String password;
     private String username;
-    private String email;
+    private String phoneNumber;
     private String address;
     private Boolean gender;
     private Date dateOfBirth;

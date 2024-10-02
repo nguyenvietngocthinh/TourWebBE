@@ -15,14 +15,14 @@ import java.util.Date;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserCreateRequest {
-    @Size(min = 10, max = 10,message = "PHONENUMBER_INVALID")
-    @Pattern(regexp = "0\\d{9}",message = "PHONENUMBER_INVALID")
-    String phoneNumber;
+    @Size(min = 0 ,message = "EMAIL_INVALID")
+    @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@gmail\\.com$", message = "EMAIL_INVALID")
+    String email;
 
     @Size(min = 1, message = "PASSWORD_INVALID")
     String password;
     String username;
-    String email;
+    String phoneNumber;
     String address;
     Boolean gender;
     Date dateOfBirth;
