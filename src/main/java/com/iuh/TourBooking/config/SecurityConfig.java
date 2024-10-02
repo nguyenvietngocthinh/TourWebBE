@@ -37,6 +37,18 @@ public class SecurityConfig {
     private String signerKey;
 
     @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .cors(cors -> cors.disable())  // Cấu hình CORS
+                .csrf(csrf -> csrf.disable())  // Tắt CSRF nếu không cần
+                .authorizeHttpRequests(auth -> auth
+                        .anyRequest().permitAll());  // Cho phép tất cả các yêu cầu (tuỳ chỉnh theo nhu cầu)
+
+        return http.build();
+    }
+
+
+    @Bean
     public SecurityFilterChain filterChain (HttpSecurity httpSecurity) throws Exception{
        httpSecurity
                .authorizeRequests(authorizeRequests ->
