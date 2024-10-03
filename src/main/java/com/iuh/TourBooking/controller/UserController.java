@@ -34,13 +34,6 @@ public class UserController{
                 .build();
     }
 
-    @GetMapping("/phone/{phoneNumber}")
-    private ApiResponse<UserResponse> getUserByPhoneNumber (@PathVariable("phoneNumber") String phoneNumber) {
-        return ApiResponse.<UserResponse>builder()
-                .result(userService.getUserByPhoneNumber(phoneNumber))
-                .build();
-    }
-
     @GetMapping("{email}")
     private ApiResponse<UserResponse> getUserByEmail (@PathVariable("email") String email) {
         return ApiResponse.<UserResponse>builder()
@@ -58,10 +51,6 @@ public class UserController{
         return userService.getUserByUserId(userId);
     }
 
-    @PutMapping("/phone/{phoneNumber}")
-    private UserResponse updateUserByPhoneNumber(@PathVariable String phoneNumber ,@RequestBody UserUpdateRequest userUpdateRequest) {
-        return userService.updateUserByPhoneNumber(phoneNumber, userUpdateRequest);
-    }
 
     @PutMapping("/{email}")
     private UserResponse updateUserByEmail(@PathVariable String email ,@RequestBody UserUpdateRequest userUpdateRequest) {
@@ -73,11 +62,6 @@ public class UserController{
         return userService.updateUserByUserId(userId, userUpdateRequest);
     }
 
-    @DeleteMapping("/phone/{phoneNumber}")
-    private ApiResponse<String> deleteUserByPhoneNumber(@PathVariable String phoneNumber) {
-        userService.deleteUserByPhoneNumber(phoneNumber);
-        return ApiResponse.<String>builder().result("User has been deleted").build();
-    }
 
     @DeleteMapping("{admin}")
     private ApiResponse<String> deleteUserByEmail(@PathVariable String email) {

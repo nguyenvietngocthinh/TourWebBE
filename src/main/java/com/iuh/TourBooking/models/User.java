@@ -24,6 +24,7 @@ public class User {
     private String phoneNumber;
     private String address;
     private Boolean gender;
+    private Boolean isOnline;
     private Date dateOfBirth;
     private Set<String> roles;
     private Date createdAt = new Date();

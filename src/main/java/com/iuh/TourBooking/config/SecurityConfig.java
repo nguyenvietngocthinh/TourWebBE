@@ -27,30 +27,24 @@ import javax.crypto.spec.SecretKeySpec;
 @EnableMethodSecurity
 public class SecurityConfig {
 
+    // Mang chua api public
     private final String[] PUBLIC_ENDPOINTS = {
             "/users",
             "/auth/login",
             "/auth/introspect"
     };
 
+    // Dung de tao token va chong hacker
     @Value("${jwt.signerKey}")
     private String signerKey;
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .cors(cors -> cors.disable())  // Cấu hình CORS
-                .csrf(csrf -> csrf.disable())  // Tắt CSRF nếu không cần
-                .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll());  // Cho phép tất cả các yêu cầu (tuỳ chỉnh theo nhu cầu)
 
-        return http.build();
-    }
-
-
+    //Phan quyen
     @Bean
     public SecurityFilterChain filterChain (HttpSecurity httpSecurity) throws Exception{
        httpSecurity
+               .cors(cors -> cors.disable())  // Cấu hình CORS
+               .csrf(csrf -> csrf.disable())
                .authorizeRequests(authorizeRequests ->
                        authorizeRequests
                                .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
@@ -74,6 +68,7 @@ public class SecurityConfig {
         return jwtAuthenticationConverter;
     }
 
+    // Tao token
     @Bean
     JwtDecoder jwtDecoder() {
         SecretKeySpec secretKeySpec = new SecretKeySpec(signerKey.getBytes(), "HS512");
@@ -82,6 +77,7 @@ public class SecurityConfig {
                 .build();
     }
 
+    // Ma hoa password
     @Bean
     PasswordEncoder passwordEncoder(){
         return  new BCryptPasswordEncoder(10);

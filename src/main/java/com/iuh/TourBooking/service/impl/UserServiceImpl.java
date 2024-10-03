@@ -50,16 +50,7 @@ public class UserServiceImpl implements UserService {
         roles.add(Role.USER.name());
 
         user.setRoles(roles);
-
-        return userMapper.toUserResponse(userRepository.save(user));
-    }
-
-    @Override
-    public UserResponse updateUserByPhoneNumber(String phoneNumber, UserUpdateRequest userUpdateRequest) {
-        User user = userRepository.findByPhoneNumber(phoneNumber)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        userMapper.updateUser(user, userUpdateRequest);
+        user.setIsOnline(false);
 
         return userMapper.toUserResponse(userRepository.save(user));
     }
@@ -83,16 +74,15 @@ public class UserServiceImpl implements UserService {
 
         return userMapper.toUserResponse(userRepository.save(user));
     }
-    @PreAuthorize("hasRole('ADMIN')")
-    @Override
-    public void deleteUserByPhoneNumber(String phoneNumber) {
-        userRepository.deleteByPhoneNumber(phoneNumber);
-    }
+
+
+
     @PreAuthorize("hasRole('ADMIN')")
     @Override
     public void deleteUserByEmail(String email) {
         userRepository.deleteByEmail(email);
     }
+
     @PreAuthorize("hasRole('ADMIN')")
     @Override
     public void deleteUserByUserId(ObjectId userId) {
@@ -102,17 +92,10 @@ public class UserServiceImpl implements UserService {
     @PreAuthorize("hasRole('ADMIN')")
     @Override
     public List<UserResponse> getAllUser() {
-        log.info("In method get Users");
         return userRepository.findAll().stream()
                 .map(userMapper::toUserResponse).toList();
     }
-    @PostAuthorize("returnObject.phoneNumber == authentication.name || hasRole('ADMIN')")
-    @Override
-    public UserResponse getUserByPhoneNumber(String phoneNumber) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return userMapper.toUserResponse(userRepository.findByPhoneNumber(phoneNumber)
-                .orElseThrow(() -> new RuntimeException("User not found")));
-    }
+
 
     @PostAuthorize("returnObject.email == authentication.name || hasRole('ADMIN')")
     @Override
@@ -125,7 +108,20 @@ public class UserServiceImpl implements UserService {
     @PostAuthorize("returnObject.email == authentication.name || hasRole('ADMIN')")
     @Override
     public UserResponse getUserByUserId(ObjectId userId) {
-        log.info("In method get User by userId");
+        // Lấy đối tượng Authentication
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        // In ra thông tin authentication
+        log.info("Authentication details: {}", authentication); // Sử dụng log.info để in ra
+        log.info("Authentication name (email): {}", authentication.getName()); // Email của user
+
+        // Nếu muốn in ra authorities (các roles), bạn có thể làm như sau:
+        log.info("Authorities (roles): {}", authentication.getAuthorities());
+
+        // In ra các chi tiết khác (nếu có) của authentication
+        log.info("Principal: {}", authentication.getPrincipal());
+        log.info("Credentials: {}", authentication.getCredentials());
+        log.info("Details: {}", authentication.getDetails());
         return userMapper.toUserResponse(userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found")));
     }
@@ -134,6 +130,7 @@ public class UserServiceImpl implements UserService {
     public UserResponse getMyinfo() {
         var context = SecurityContextHolder.getContext();
         String email = context.getAuthentication().getName();
+        log.info("Email of authenticated user: {}", email);
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));

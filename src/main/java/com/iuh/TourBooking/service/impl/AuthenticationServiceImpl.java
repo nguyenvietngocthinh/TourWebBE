@@ -52,10 +52,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         boolean authenticated = passwordEncoder.matches(authenticationRequest.getPassword(), user.getPassword());
 
-        if(!authenticated) {
+        if (!authenticated) {
             throw new AppException(ErrorCode.UNAUTHENTICATED);
         }
 
+        // Cập nhật trạng thái isOnline thành true
+        user.setIsOnline(true);
+        userRepository.save(user);  // Lưu đối tượng user đã cập nhật
+
+        // Tạo token cho người dùng
         var token = generateToken(user);
 
         return AuthenticationResponse.builder()
@@ -63,6 +68,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .token(token)
                 .build();
     }
+
 
     @Override
     public IntrospectResponse introspect(IntrospectRequest introspectRequest) throws JOSEException, ParseException {

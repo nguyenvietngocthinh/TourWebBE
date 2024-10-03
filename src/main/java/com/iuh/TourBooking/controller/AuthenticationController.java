@@ -1,5 +1,6 @@
 package com.iuh.TourBooking.controller;
 
+import com.iuh.TourBooking.models.User;
 import com.iuh.TourBooking.models.dto.request.AuthenticationRequest;
 import com.iuh.TourBooking.models.dto.request.IntrospectRequest;
 import com.iuh.TourBooking.models.dto.response.ApiResponse;
@@ -27,6 +28,7 @@ public class AuthenticationController {
     @PostMapping("/login")
     ApiResponse<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest authenticationRequest) {
         var result = authenticationService.authenticate(authenticationRequest);
+
 
         return ApiResponse.<AuthenticationResponse>builder()
                 .result(result)
