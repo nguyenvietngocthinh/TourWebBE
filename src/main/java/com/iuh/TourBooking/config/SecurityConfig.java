@@ -19,6 +19,9 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import javax.crypto.spec.SecretKeySpec;
 
@@ -41,22 +44,35 @@ public class SecurityConfig {
 
     //Phan quyen
     @Bean
-    public SecurityFilterChain filterChain (HttpSecurity httpSecurity) throws Exception{
-       httpSecurity
-               .cors(cors -> cors.disable())  // Cấu hình CORS
-               .csrf(csrf -> csrf.disable())
-               .authorizeRequests(authorizeRequests ->
-                       authorizeRequests
-                               .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
-                               .anyRequest().authenticated()
-               );
-       httpSecurity.oauth2ResourceServer(oauth2 ->
-                oauth2.jwt(jwtConfigurer -> jwtConfigurer.decoder(jwtDecoder())
-                        .jwtAuthenticationConverter(jwtAuthenticationConverter()))
-               );
+    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
+        httpSecurity
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))  // Cấu hình CORS
+                .csrf(csrf -> csrf.disable())  // Tắt CSRF nếu không cần thiết
+                .authorizeRequests(authorizeRequests ->
+                        authorizeRequests
+                                .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()  // Các endpoint public
+                                .anyRequest().authenticated()  // Bắt buộc authentication với các endpoint còn lại
+                );
 
-       httpSecurity.csrf(AbstractHttpConfigurer::disable);
-       return httpSecurity.build();
+        httpSecurity.oauth2ResourceServer(oauth2 -> oauth2
+                .jwt(jwtConfigurer -> jwtConfigurer.decoder(jwtDecoder())
+                        .jwtAuthenticationConverter(jwtAuthenticationConverter())));
+
+        return httpSecurity.build();
+    }
+
+    // Cấu hình CORS
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.addAllowedOriginPattern("*"); // Cho phép origin của React
+        configuration.addAllowedMethod("*");  // Cho phép tất cả các phương thức (GET, POST, PUT, DELETE, v.v.)
+        configuration.addAllowedHeader("*");  // Cho phép tất cả các header
+        configuration.setAllowCredentials(true);  // Cho phép gửi thông tin xác thực (nếu cần thiết)
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);  // Áp dụng cho tất cả các đường dẫn API
+        return source;
     }
 
     JwtAuthenticationConverter jwtAuthenticationConverter(){

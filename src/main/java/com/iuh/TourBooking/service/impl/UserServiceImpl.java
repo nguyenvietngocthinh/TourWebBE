@@ -96,6 +96,11 @@ public class UserServiceImpl implements UserService {
                 .map(userMapper::toUserResponse).toList();
     }
 
+    @Override
+    public List<User> getAllUserDB() {
+        return userRepository.findAll();  // Giả sử bạn đang lấy tất cả người dùng từ cơ sở dữ liệu
+    }
+
 
     @PostAuthorize("returnObject.email == authentication.name || hasRole('ADMIN')")
     @Override

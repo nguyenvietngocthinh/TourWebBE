@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/users")
@@ -27,12 +28,28 @@ public class UserController{
                 .build();
     }
 
+//    @GetMapping
+//    ApiResponse<List<UserResponse>> getAllUsers() {
+//        return ApiResponse.<List<UserResponse>>builder()
+//                .result(userService.getAllUser())
+//                .build();
+//    }
     @GetMapping
     ApiResponse<List<UserResponse>> getAllUsers() {
+        List<User> users = userService.getAllUserDB();
+        List<UserResponse> userResponses = users.stream()
+                .map(user -> UserResponse.builder()
+                        .email(user.getEmail())
+                        .username(user.getUsername())
+                        .isOnline(user.getIsOnline()) // Thêm trạng thái isOnline
+                        .build())
+                .collect(Collectors.toList());
+
         return ApiResponse.<List<UserResponse>>builder()
-                .result(userService.getAllUser())
+                .result(userResponses)
                 .build();
     }
+
 
     @GetMapping("{email}")
     private ApiResponse<UserResponse> getUserByEmail (@PathVariable("email") String email) {

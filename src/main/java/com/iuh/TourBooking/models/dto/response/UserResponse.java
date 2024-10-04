@@ -22,5 +22,7 @@ public class UserResponse {
     String address;
     Boolean gender;
     Date dateOfBirth;
+    Boolean isOnline;
     Set<String> roles;
+
 }

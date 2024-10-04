@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import java.util.List;
 
 public interface UserService {
+    public List<User> getAllUserDB();
     public UserResponse createUser(UserCreateRequest userCreateRequest);
     public UserResponse updateUserByEmail(String email, UserUpdateRequest userUpdateRequest);
     public UserResponse updateUserByUserId(ObjectId userId, UserUpdateRequest userUpdateRequest);
