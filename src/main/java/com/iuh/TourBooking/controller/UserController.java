@@ -36,19 +36,11 @@ public class UserController{
 //    }
     @GetMapping
     ApiResponse<List<UserResponse>> getAllUsers() {
-        List<User> users = userService.getAllUserDB();
-        List<UserResponse> userResponses = users.stream()
-                .map(user -> UserResponse.builder()
-                        .email(user.getEmail())
-                        .username(user.getUsername())
-                        .isOnline(user.getIsOnline()) // Thêm trạng thái isOnline
-                        .build())
-                .collect(Collectors.toList());
-
         return ApiResponse.<List<UserResponse>>builder()
-                .result(userResponses)
+                .result(userService.getAllUser())
                 .build();
     }
+
 
 
     @GetMapping("{email}")

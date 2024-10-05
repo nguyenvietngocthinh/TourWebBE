@@ -92,8 +92,11 @@ public class UserServiceImpl implements UserService {
     @PreAuthorize("hasRole('ADMIN')")
     @Override
     public List<UserResponse> getAllUser() {
+        log.info("In method get Users");
         return userRepository.findAll().stream()
-                .map(userMapper::toUserResponse).toList();
+                .filter(user -> !"admin@gmail.com".equals(user.getEmail()))  // Bỏ qua user có email là admin@gmail.com
+                .map(userMapper::toUserResponse)
+                .toList();
     }
 
     @Override
@@ -113,20 +116,6 @@ public class UserServiceImpl implements UserService {
     @PostAuthorize("returnObject.email == authentication.name || hasRole('ADMIN')")
     @Override
     public UserResponse getUserByUserId(ObjectId userId) {
-        // Lấy đối tượng Authentication
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        // In ra thông tin authentication
-        log.info("Authentication details: {}", authentication); // Sử dụng log.info để in ra
-        log.info("Authentication name (email): {}", authentication.getName()); // Email của user
-
-        // Nếu muốn in ra authorities (các roles), bạn có thể làm như sau:
-        log.info("Authorities (roles): {}", authentication.getAuthorities());
-
-        // In ra các chi tiết khác (nếu có) của authentication
-        log.info("Principal: {}", authentication.getPrincipal());
-        log.info("Credentials: {}", authentication.getCredentials());
-        log.info("Details: {}", authentication.getDetails());
         return userMapper.toUserResponse(userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found")));
     }

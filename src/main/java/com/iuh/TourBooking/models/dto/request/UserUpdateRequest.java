@@ -22,4 +22,5 @@ public class UserUpdateRequest {
     String address;
     Boolean gender;
     Date dateOfBirth;
+    Boolean isOnline;
 }

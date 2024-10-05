@@ -27,4 +27,5 @@ public class UserCreateRequest {
     String address;
     Boolean gender;
     Date dateOfBirth;
+    Boolean isOnline;
 }

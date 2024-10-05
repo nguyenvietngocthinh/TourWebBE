@@ -29,6 +29,7 @@ public class ApplicationInitConfig {
                         .email("admin@gmail.com")
                         .password(passwordEncoder.encode("admin"))
                         .roles(roles)
+                        .isOnline(false)
                         .build();
                 userRepository.save(user);
                 log.warn("admin user has been created with pass: admin, please change it after login");
