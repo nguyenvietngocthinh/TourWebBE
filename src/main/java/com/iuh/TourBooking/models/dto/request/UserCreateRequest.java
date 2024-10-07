@@ -6,6 +6,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.util.Date;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -28,4 +29,5 @@ public class UserCreateRequest {
     Boolean gender;
     Date dateOfBirth;
     Boolean isOnline;
+    Set<String> roles;
 }

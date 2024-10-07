@@ -28,6 +28,13 @@ public class UserController{
                 .build();
     }
 
+    @PostMapping("/adminCreate")
+    private ApiResponse<UserResponse> createUserAdmin(@RequestBody @Valid UserCreateRequest userCreateRequest) {
+        return ApiResponse.<UserResponse>builder()
+                .result(userService.createUserAdmin(userCreateRequest))
+                .build();
+    }
+
 //    @GetMapping
 //    ApiResponse<List<UserResponse>> getAllUsers() {
 //        return ApiResponse.<List<UserResponse>>builder()

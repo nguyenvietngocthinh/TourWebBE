@@ -56,6 +56,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserResponse createUserAdmin(UserCreateRequest userCreateRequest) {
+        if (userRepository.existsByEmail(userCreateRequest.getEmail())) {
+            throw new AppException(ErrorCode.USER_EXISTED);
+        }
+
+        User user = userMapper.toUser(userCreateRequest);
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+        user.setPassword(passwordEncoder.encode(userCreateRequest.getPassword()));
+
+        user.setIsOnline(false);
+
+        return userMapper.toUserResponse(userRepository.save(user));
+    }
+
+    @Override
     public UserResponse updateUserByEmail(String email, UserUpdateRequest userUpdateRequest) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));

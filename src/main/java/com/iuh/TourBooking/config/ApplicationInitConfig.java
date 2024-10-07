@@ -28,6 +28,7 @@ public class ApplicationInitConfig {
                 User user = User.builder()
                         .email("admin@gmail.com")
                         .password(passwordEncoder.encode("admin"))
+                        .username("Admin")
                         .roles(roles)
                         .isOnline(false)
                         .build();

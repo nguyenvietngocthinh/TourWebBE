@@ -12,6 +12,7 @@ import java.util.List;
 public interface UserService {
     public List<User> getAllUserDB();
     public UserResponse createUser(UserCreateRequest userCreateRequest);
+    public UserResponse createUserAdmin(UserCreateRequest userCreateRequest);
     public UserResponse updateUserByEmail(String email, UserUpdateRequest userUpdateRequest);
     public UserResponse updateUserByUserId(ObjectId userId, UserUpdateRequest userUpdateRequest);
     public void deleteUserByEmail(String email);
