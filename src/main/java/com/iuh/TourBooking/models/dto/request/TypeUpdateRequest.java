@@ -11,6 +11,5 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TypeUpdateRequest {
-    private String typeId;
     private String name;
 }
