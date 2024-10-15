@@ -41,7 +41,7 @@ public class TypeServiceImpl implements TypeService {
 
     @Override
     public void deleteType(ObjectId id) {
-
+        typeRepository.deleteById(id);
     }
 
     @Override
