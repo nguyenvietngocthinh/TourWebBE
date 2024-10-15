@@ -79,7 +79,7 @@ public class UserController{
     }
 
 
-    @DeleteMapping("{admin}")
+    @DeleteMapping("{email}")
     private ApiResponse<String> deleteUserByEmail(@PathVariable String email) {
         if (email == "admin@gmail.com"){
             return ApiResponse.<String>builder().result("User can not been deleted").build();
