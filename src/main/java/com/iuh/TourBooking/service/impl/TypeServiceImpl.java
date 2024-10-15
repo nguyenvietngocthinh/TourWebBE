@@ -46,6 +46,8 @@ public class TypeServiceImpl implements TypeService {
 
     @Override
     public List<TypeResponse> getAllUser() {
-        return null;
+        return typeRepository.findAll().stream()
+                .map(typeMapper::toTypeResponse)
+                .toList();
     }
 }
