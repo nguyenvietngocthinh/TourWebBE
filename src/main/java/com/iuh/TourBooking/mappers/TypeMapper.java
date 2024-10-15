@@ -15,5 +15,5 @@ import org.mapstruct.MappingTarget;
 public interface TypeMapper {
     Type toType(TypeCreateRequest typeCreateRequest);
     TypeResponse toTypeResponse(Type type);
-    void updateUser(@MappingTarget Type type, TypeUpdateRequest typeUpdateRequest);
+    void updateType(@MappingTarget Type type, TypeUpdateRequest typeUpdateRequest);
 }

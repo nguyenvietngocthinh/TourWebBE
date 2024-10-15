@@ -5,6 +5,7 @@ import com.iuh.TourBooking.enums.ErrorCode;
 import com.iuh.TourBooking.exception.AppException;
 import com.iuh.TourBooking.mappers.TypeMapper;
 import com.iuh.TourBooking.models.Type;
+import com.iuh.TourBooking.models.User;
 import com.iuh.TourBooking.models.dto.request.TypeCreateRequest;
 import com.iuh.TourBooking.models.dto.request.TypeUpdateRequest;
 import com.iuh.TourBooking.models.dto.response.TypeResponse;
@@ -35,8 +36,13 @@ public class TypeServiceImpl implements TypeService {
     }
 
     @Override
-    public TypeResponse updateType(ObjectId id, TypeUpdateRequest typeUpdateRequest) {
-        return null;
+    public TypeResponse updateType(String typeId, TypeUpdateRequest typeUpdateRequest) {
+        Type type = typeRepository.findByTypeId(typeId)
+                .orElseThrow(() -> new RuntimeException("Type not found"));
+
+        typeMapper.updateType(type, typeUpdateRequest);
+
+        return typeMapper.toTypeResponse(typeRepository.save(type));
     }
 
     @Override

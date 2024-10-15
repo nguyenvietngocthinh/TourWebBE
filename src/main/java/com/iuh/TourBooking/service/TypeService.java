@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface TypeService {
     public TypeResponse createType(TypeCreateRequest typeCreateRequest);
-    public TypeResponse updateType(ObjectId id, TypeUpdateRequest typeUpdateRequest);
+    public TypeResponse updateType(String typeId, TypeUpdateRequest typeUpdateRequest);
     public void deleteType(ObjectId id);
     public List<TypeResponse> getAllUser();
 }

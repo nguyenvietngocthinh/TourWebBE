@@ -6,7 +6,10 @@ import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface TypeRepository extends MongoRepository<Type, ObjectId> {
     boolean existsById(String id);
+    Optional<Type> findByTypeId(String typeId);
 }
