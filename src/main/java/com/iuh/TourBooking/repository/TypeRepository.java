@@ -13,5 +13,5 @@ public interface TypeRepository extends MongoRepository<Type, ObjectId> {
     boolean existsById(String id);
     Optional<Type> findByTypeId(String typeId);
 
-    void deleteId(String typeId);
+    void deleteByTypeId(String typeId);
 }

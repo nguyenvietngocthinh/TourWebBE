@@ -13,6 +13,7 @@ import com.iuh.TourBooking.repository.TypeRepository;
 import com.iuh.TourBooking.service.TypeService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 
@@ -27,6 +28,7 @@ public class TypeServiceImpl implements TypeService {
     @Autowired
     private TypeMapper typeMapper;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Override
     public TypeResponse createType(TypeCreateRequest typeCreateRequest) {
         if (typeRepository.existsById(typeCreateRequest.getTypeId())) {
@@ -37,6 +39,7 @@ public class TypeServiceImpl implements TypeService {
         return typeMapper.toTypeResponse(typeRepository.save(type));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Override
     public TypeResponse updateType(String typeId, TypeUpdateRequest typeUpdateRequest) {
         Type type = typeRepository.findByTypeId(typeId)
@@ -47,11 +50,13 @@ public class TypeServiceImpl implements TypeService {
         return typeMapper.toTypeResponse(typeRepository.save(type));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Override
     public void deleteType(String typeId) {
-        typeRepository.deleteId(typeId);
+        typeRepository.deleteByTypeId(typeId);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Override
     public List<TypeResponse> getAllType() {
         return typeRepository.findAll().stream()
