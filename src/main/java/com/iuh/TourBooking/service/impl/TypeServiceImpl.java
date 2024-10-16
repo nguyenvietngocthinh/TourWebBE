@@ -31,7 +31,7 @@ public class TypeServiceImpl implements TypeService {
     @PreAuthorize("hasRole('ADMIN')")
     @Override
     public TypeResponse createType(TypeCreateRequest typeCreateRequest) {
-        if (typeRepository.existsById(typeCreateRequest.getTypeId())) {
+        if (typeRepository.existsByTypeId(typeCreateRequest.getTypeId())) {
             throw new AppException(ErrorCode.TYPE_EXISTED);
         }
 

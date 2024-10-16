@@ -10,8 +10,8 @@ import java.util.Optional;
 
 @Repository
 public interface TypeRepository extends MongoRepository<Type, ObjectId> {
-    boolean existsById(String id);
+    boolean existsByTypeId(String typedId);
     Optional<Type> findByTypeId(String typeId);
-
+    boolean existsByName(String name);
     void deleteByTypeId(String typeId);
 }

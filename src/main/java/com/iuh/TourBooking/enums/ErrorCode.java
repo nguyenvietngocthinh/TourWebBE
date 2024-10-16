@@ -20,6 +20,7 @@ public enum ErrorCode {
     UNAUTHENTICATED(1006, "Unauthenticated", HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED(1007, "You do not have a permission", HttpStatus.FORBIDDEN),
     TYPE_EXISTED(1008, "Type existed", HttpStatus.BAD_REQUEST),
+    TYPETOUR_EXISTED(1009, "Type Tour existed", HttpStatus.BAD_REQUEST),
     ;
 
     private int code;
