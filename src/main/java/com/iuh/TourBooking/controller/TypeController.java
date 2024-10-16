@@ -41,4 +41,11 @@ public class TypeController {
         return typeService.updateType(typeId, typeUpdateRequest);
     }
 
+    @DeleteMapping("{typeId}")
+    private ApiResponse<String> deleteType(@PathVariable String typeId) {
+        typeService.deleteType(typeId);
+        return ApiResponse.<String>builder().result("Type has been deleted").build();
+    }
+
+
 }
