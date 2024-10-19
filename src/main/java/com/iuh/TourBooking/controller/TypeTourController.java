@@ -35,6 +35,9 @@ public class TypeTourController {
                 .build();
     }
 
+
+
+
     @PutMapping("/{typeTourId}")
     private TypeTourResponse updateTypeTour(@PathVariable String typeTourId , @RequestBody TypeTourUpdateRequest typeTourUpdateRequest) {
         return typeTourService.updateTypeTour(typeTourId, typeTourUpdateRequest);
@@ -45,4 +48,12 @@ public class TypeTourController {
         typeTourService.deleteTypeTour(typeTourId);
         return ApiResponse.<String>builder().result("Type Tour has been deleted").build();
     }
+
+    @GetMapping("/by-type/{typeId}")
+    public ApiResponse<List<TypeTourResponse>> getTypeToursByTypeId(@PathVariable String typeId) {
+        return ApiResponse.<List<TypeTourResponse>>builder()
+                .result(typeTourService.getTypeToursByTypeId(typeId))
+                .build();
+    }
+
 }

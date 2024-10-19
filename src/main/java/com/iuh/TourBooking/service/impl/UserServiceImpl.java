@@ -55,6 +55,7 @@ public class UserServiceImpl implements UserService {
         return userMapper.toUserResponse(userRepository.save(user));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Override
     public UserResponse createUserAdmin(UserCreateRequest userCreateRequest) {
         if (userRepository.existsByEmail(userCreateRequest.getEmail())) {

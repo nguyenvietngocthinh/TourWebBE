@@ -56,7 +56,7 @@ public class TypeServiceImpl implements TypeService {
         typeRepository.deleteByTypeId(typeId);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+
     @Override
     public List<TypeResponse> getAllType() {
         return typeRepository.findAll().stream()

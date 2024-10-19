@@ -32,7 +32,6 @@ public class TourServiceImpl implements TourService {
     @Autowired
     private TourMapper tourMapper;
 
-    @PreAuthorize("hasRole('ADMIN')")
     @Override
     public TourResponse createTour(TourCreateRequest tourCreateRequest) {
 

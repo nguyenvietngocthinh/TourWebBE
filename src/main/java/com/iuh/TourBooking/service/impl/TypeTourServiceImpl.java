@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TypeTourServiceImpl implements TypeTourService {
@@ -54,6 +55,7 @@ public class TypeTourServiceImpl implements TypeTourService {
         return typeTourMapper.toTypeTourResponse(typeTourRepository.save(typeTour));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Override
     public TypeTourResponse updateTypeTour(String typeTourId, TypeTourUpdateRequest typeTourUpdateRequest) {
         TypeTour typeTour = typeTourRepository.findByTypeTourId(typeTourId)
@@ -64,6 +66,7 @@ public class TypeTourServiceImpl implements TypeTourService {
         return typeTourMapper.toTypeTourResponse(typeTourRepository.save(typeTour));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Override
     public void deleteTypeTour(String typeTourId) {
         typeTourRepository.deleteByTypeTourId(typeTourId);
@@ -72,6 +75,14 @@ public class TypeTourServiceImpl implements TypeTourService {
     @Override
     public List<TypeTourResponse> getAllTypeTour() {
         return typeTourRepository.findAll().stream()
+                .map(typeTourMapper::toTypeTourResponse)
+                .toList();
+    }
+
+    @Override
+    public List<TypeTourResponse> getTypeToursByTypeId(String typeId) {
+        List<TypeTour> typeTours = typeTourRepository.findAllByTypeId(typeId);
+        return typeTours.stream()
                 .map(typeTourMapper::toTypeTourResponse)
                 .toList();
     }
