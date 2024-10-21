@@ -12,6 +12,7 @@ import com.iuh.TourBooking.service.TypeTourService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -22,9 +23,10 @@ public class TourController {
     private TourService tourService;
 
     @PostMapping
-    private ApiResponse<TourResponse> createTour(@RequestBody @Valid TourCreateRequest tourCreateRequest) {
+    private ApiResponse<TourResponse> createTour( @RequestPart("tour") TourCreateRequest tourCreateRequest,
+                                                  @RequestPart(value = "image", required = false) MultipartFile image) {
         return ApiResponse.<TourResponse>builder()
-                .result(tourService.createTour(tourCreateRequest))
+                .result(tourService.createTour(tourCreateRequest, image))
                 .build();
     }
 

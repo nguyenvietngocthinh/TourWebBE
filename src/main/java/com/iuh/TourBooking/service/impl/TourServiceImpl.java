@@ -14,12 +14,16 @@ import com.iuh.TourBooking.models.dto.response.TourResponse;
 import com.iuh.TourBooking.models.dto.response.TypeTourResponse;
 import com.iuh.TourBooking.repository.TourRepository;
 import com.iuh.TourBooking.repository.TypeTourRepository;
+import com.iuh.TourBooking.service.S3Service;
 import com.iuh.TourBooking.service.TourService;
 import com.iuh.TourBooking.service.TypeTourService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,32 +36,38 @@ public class TourServiceImpl implements TourService {
     @Autowired
     private TourMapper tourMapper;
 
-    @Override
-    public TourResponse createTour(TourCreateRequest tourCreateRequest) {
+    @Autowired
+    private S3Service s3Service;
 
+    @Override
+    public TourResponse createTour(TourCreateRequest tourCreateRequest, MultipartFile image) {
+
+        // Kiểm tra mã tour có tồn tại chưa
         if (tourRepository.existsByTourCode(tourCreateRequest.getTourCode())) {
             throw new AppException(ErrorCode.TOUR_EXISTED);
         }
 
-        // Lấy typeTourId lớn nhất hiện có trong database
+        // Lấy tourId lớn nhất hiện có trong database
         Optional<Tour> latestTour = tourRepository.findTopByOrderByTourIdDesc();
-        String nextTourId;
+        String nextTourId = latestTour.map(tour -> String.valueOf(Integer.parseInt(tour.getTourId()) + 1))
+                .orElse("1");
 
-        // Gán typeTourId mới dựa trên kết quả tìm kiếm
-        if (latestTour.isPresent()) {
-            int maxId = Integer.parseInt(latestTour.get().getTourId());
-            nextTourId = String.valueOf(maxId + 1);  // Tăng thêm 1
-        } else {
-            nextTourId = "1";  // Nếu chưa có dữ liệu thì bắt đầu từ 1
-        }
-
-        // Tạo TypeTour với typeTourId mới
+        // Khởi tạo tour từ request
         Tour tour = tourMapper.toTour(tourCreateRequest);
-        tour.setTourId(nextTourId);  // Gán typeTourId mới
+        tour.setTourId(nextTourId);
 
-        // Lưu vào database và trả về response
+        // Upload ảnh nếu có
+        String imageUrl = null;
+        if (image != null && !image.isEmpty()) {
+            imageUrl = s3Service.uploadFile(image);  // Không cần try-catch nếu uploadFile không ném IOException
+        }
+        tour.setImage(imageUrl);
+
+        // Lưu tour vào DB và trả về response
         return tourMapper.toTourResponse(tourRepository.save(tour));
     }
+
+
 
     @Override
     public TourResponse updateTour(String tourId, TourUpdateRequest tourUpdateRequest) {

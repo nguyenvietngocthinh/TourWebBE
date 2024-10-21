@@ -22,6 +22,7 @@ public enum ErrorCode {
     TYPE_EXISTED(1008, "Type existed", HttpStatus.BAD_REQUEST),
     TYPETOUR_EXISTED(1009, "Type Tour existed", HttpStatus.BAD_REQUEST),
     TOUR_EXISTED(1010, "Tour existed", HttpStatus.BAD_REQUEST),
+    UPLOADIMAGE_FAIL(1011, "Up file image fail", HttpStatus.BAD_REQUEST),
     ;
 
     private int code;

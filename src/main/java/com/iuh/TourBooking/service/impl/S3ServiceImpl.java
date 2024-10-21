@@ -1,53 +1,43 @@
 package com.iuh.TourBooking.service.impl;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.iuh.TourBooking.service.S3Service;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.PutObjectRequest;
-import software.amazon.awssdk.services.s3.model.PutObjectResponse;
 
+
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class S3ServiceImpl implements S3Service {
-    private final S3Client s3Client;
+    private final AmazonS3 s3Client;
 
     @Value("${aws.bucketName}")
     private String bucketName;
 
-    @Override
-    public String uploadFile(String keyPrefix, MultipartFile file) {
-        String key = keyPrefix + "/" + UUID.randomUUID() + "-" + file.getOriginalFilename();
+    public String uploadFile(MultipartFile file) {
+        File fileObj = convertMultiPartFileToFile(file);
+        String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+        s3Client.putObject(new PutObjectRequest(bucketName, fileName, fileObj));
+        fileObj.delete();
+        return "https://doanchungbucket.s3.ap-south-1.amazonaws.com/" + fileName;
+    }
 
-        try {
-            // Lưu tạm file vào đĩa
-            Path tempFile = Files.createTempFile("s3-upload-", file.getOriginalFilename());
-            Files.write(tempFile, file.getBytes(), StandardOpenOption.WRITE);
-
-            // Tạo PutObjectRequest và upload file
-            PutObjectRequest request = PutObjectRequest.builder()
-                    .bucket(bucketName)
-                    .key(key)
-                    .build();
-
-            PutObjectResponse response = s3Client.putObject(request, tempFile);
-            Files.deleteIfExists(tempFile);  // Xóa file tạm sau khi upload
-
-            if (response.sdkHttpResponse().isSuccessful()) {
-                return s3Client.utilities().getUrl(builder -> builder.bucket(bucketName).key(key)).toString();
-            } else {
-                throw new RuntimeException("Lỗi khi upload file lên S3");
-            }
+    private File convertMultiPartFileToFile(MultipartFile file) {
+        File convertedFile = new File(file.getOriginalFilename());
+        try (FileOutputStream fos = new FileOutputStream(convertedFile)) {
+            fos.write(file.getBytes());
         } catch (IOException e) {
-            throw new RuntimeException("Lỗi khi xử lý file", e);
+            log.error("Error converting multipartFile to file", e);
         }
+        return convertedFile;
     }
 }
