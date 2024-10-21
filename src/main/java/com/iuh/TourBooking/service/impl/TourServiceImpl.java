@@ -41,19 +41,19 @@ public class TourServiceImpl implements TourService {
 
         // Lấy typeTourId lớn nhất hiện có trong database
         Optional<Tour> latestTour = tourRepository.findTopByOrderByTourIdDesc();
-        String nextTypeTourId;
+        String nextTourId;
 
         // Gán typeTourId mới dựa trên kết quả tìm kiếm
         if (latestTour.isPresent()) {
-            int maxId = Integer.parseInt(latestTour.get().getTypeTourId());
-            nextTypeTourId = String.valueOf(maxId + 1);  // Tăng thêm 1
+            int maxId = Integer.parseInt(latestTour.get().getTourId());
+            nextTourId = String.valueOf(maxId + 1);  // Tăng thêm 1
         } else {
-            nextTypeTourId = "1";  // Nếu chưa có dữ liệu thì bắt đầu từ 1
+            nextTourId = "1";  // Nếu chưa có dữ liệu thì bắt đầu từ 1
         }
 
         // Tạo TypeTour với typeTourId mới
         Tour tour = tourMapper.toTour(tourCreateRequest);
-        tour.setTypeTourId(nextTypeTourId);  // Gán typeTourId mới
+        tour.setTourId(nextTourId);  // Gán typeTourId mới
 
         // Lưu vào database và trả về response
         return tourMapper.toTourResponse(tourRepository.save(tour));
