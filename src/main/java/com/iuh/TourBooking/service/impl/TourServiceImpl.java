@@ -17,6 +17,7 @@ import com.iuh.TourBooking.repository.TypeTourRepository;
 import com.iuh.TourBooking.service.S3Service;
 import com.iuh.TourBooking.service.TourService;
 import com.iuh.TourBooking.service.TypeTourService;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -47,14 +48,8 @@ public class TourServiceImpl implements TourService {
             throw new AppException(ErrorCode.TOUR_EXISTED);
         }
 
-        // Lấy tourId lớn nhất hiện có trong database
-        Optional<Tour> latestTour = tourRepository.findTopByOrderByTourIdDesc();
-        String nextTourId = latestTour.map(tour -> String.valueOf(Integer.parseInt(tour.getTourId()) + 1))
-                .orElse("1");
-
         // Khởi tạo tour từ request
         Tour tour = tourMapper.toTour(tourCreateRequest);
-        tour.setTourId(nextTourId);
 
         // Upload ảnh nếu có
         String imageUrl = null;
@@ -70,8 +65,8 @@ public class TourServiceImpl implements TourService {
 
 
     @Override
-    public TourResponse updateTour(String tourId, TourUpdateRequest tourUpdateRequest) {
-        Tour tour = tourRepository.findByTourId(tourId)
+    public TourResponse updateTour(ObjectId id, TourUpdateRequest tourUpdateRequest) {
+        Tour tour = tourRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Tour not found"));
 
         tourMapper.updateTour(tour, tourUpdateRequest);
@@ -80,8 +75,8 @@ public class TourServiceImpl implements TourService {
     }
 
     @Override
-    public void deleteTour(String tourId) {
-        tourRepository.deleteByTourId(tourId);
+    public void deleteTour(String tourCode) {
+        tourRepository.deleteByTourCode(tourCode);
     }
 
     @Override

@@ -1,25 +1,19 @@
-package com.iuh.TourBooking.models;
+package com.iuh.TourBooking.models.dto.request;
 
-
+import com.iuh.TourBooking.models.Customer;
 import lombok.*;
-import org.bson.types.ObjectId;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import lombok.experimental.FieldDefaults;
 
 import java.util.List;
 
-@Document(collection = "bookings")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
-public class Booking {
-    @Id
-    private ObjectId id;
-
-    private String bookingCode;
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class BookingUpdateRequest {
     private String usernameContract;
     private String emailContract;
     private String phoneNumberContract;

@@ -20,7 +20,6 @@ public class Tour {
     @Id
     private ObjectId id;
 
-    private String tourId;
     private String tourCode;
     private String name;
     private String description;

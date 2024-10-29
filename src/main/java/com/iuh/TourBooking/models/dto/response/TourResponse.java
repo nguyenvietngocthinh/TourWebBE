@@ -15,7 +15,6 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TourResponse {
-    private String tourId;
     private String tourCode;
     private String name;
     private String description;

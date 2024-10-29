@@ -15,7 +15,6 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TourUpdateRequest {
-    private String tourCode;
     private String name;
     private String description;
     private String image;

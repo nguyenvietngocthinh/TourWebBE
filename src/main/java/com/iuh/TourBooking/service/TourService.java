@@ -6,6 +6,7 @@ import com.iuh.TourBooking.models.dto.request.TypeTourCreateRequest;
 import com.iuh.TourBooking.models.dto.request.TypeTourUpdateRequest;
 import com.iuh.TourBooking.models.dto.response.TourResponse;
 import com.iuh.TourBooking.models.dto.response.TypeTourResponse;
+import org.bson.types.ObjectId;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.List;
 public interface TourService {
     public TourResponse createTour(TourCreateRequest tourCreateRequest, MultipartFile image);
 
-    public TourResponse updateTour(String tourId, TourUpdateRequest tourUpdateRequest);
-    public void deleteTour(String tourId);
+    public TourResponse updateTour(ObjectId id, TourUpdateRequest tourUpdateRequest);
+    public void deleteTour(String tourCode);
     public List<TourResponse> getAllTour();
 }
