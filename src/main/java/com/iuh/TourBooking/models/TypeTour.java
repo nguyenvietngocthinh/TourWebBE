@@ -16,7 +16,7 @@ public class TypeTour {
     @Id
     private ObjectId id;
 
-    private String typeTourId;
     private String name;
     private String typeId;
 }
+

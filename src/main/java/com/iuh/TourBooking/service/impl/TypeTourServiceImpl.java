@@ -10,6 +10,7 @@ import com.iuh.TourBooking.models.dto.request.TypeTourUpdateRequest;
 import com.iuh.TourBooking.models.dto.response.TypeTourResponse;
 import com.iuh.TourBooking.repository.TypeTourRepository;
 import com.iuh.TourBooking.service.TypeTourService;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -35,21 +36,9 @@ public class TypeTourServiceImpl implements TypeTourService {
             throw new AppException(ErrorCode.TYPETOUR_EXISTED);
         }
 
-        // Lấy typeTourId lớn nhất hiện có trong database
-        Optional<TypeTour> latestTypeTour = typeTourRepository.findTopByOrderByTypeTourIdDesc();
-        String nextTypeTourId;
-
-        // Gán typeTourId mới dựa trên kết quả tìm kiếm
-        if (latestTypeTour.isPresent()) {
-            int maxId = Integer.parseInt(latestTypeTour.get().getTypeTourId());
-            nextTypeTourId = String.valueOf(maxId + 1);  // Tăng thêm 1
-        } else {
-            nextTypeTourId = "1";  // Nếu chưa có dữ liệu thì bắt đầu từ 1
-        }
-
         // Tạo TypeTour với typeTourId mới
         TypeTour typeTour = typeTourMapper.toTypeTour(typeTourCreateRequest);
-        typeTour.setTypeTourId(nextTypeTourId);  // Gán typeTourId mới
+
 
         // Lưu vào database và trả về response
         return typeTourMapper.toTypeTourResponse(typeTourRepository.save(typeTour));
@@ -57,8 +46,8 @@ public class TypeTourServiceImpl implements TypeTourService {
 
     @PreAuthorize("hasRole('ADMIN')")
     @Override
-    public TypeTourResponse updateTypeTour(String typeTourId, TypeTourUpdateRequest typeTourUpdateRequest) {
-        TypeTour typeTour = typeTourRepository.findByTypeTourId(typeTourId)
+    public TypeTourResponse updateTypeTour(ObjectId id, TypeTourUpdateRequest typeTourUpdateRequest) {
+        TypeTour typeTour = typeTourRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Type not found"));
 
         typeTourMapper.updateTypeTour(typeTour, typeTourUpdateRequest);
@@ -68,8 +57,8 @@ public class TypeTourServiceImpl implements TypeTourService {
 
     @PreAuthorize("hasRole('ADMIN')")
     @Override
-    public void deleteTypeTour(String typeTourId) {
-        typeTourRepository.deleteByTypeTourId(typeTourId);
+    public void deleteTypeTour(String name) {
+        typeTourRepository.deleteByName(name);
     }
 
     @Override

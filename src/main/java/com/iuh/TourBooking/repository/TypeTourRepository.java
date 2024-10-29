@@ -14,16 +14,14 @@ import java.util.Optional;
 
 @Repository
 public interface TypeTourRepository extends MongoRepository<TypeTour, ObjectId> {
-    boolean existsByTypeTourId(String typedTourId);
 
-    Optional<TypeTour> findByTypeTourId(String typeTourId);
+    Optional<TypeTour> findById(ObjectId id);
 
     boolean existsByName(String name);
 
-    @Query(value = "{}", sort = "{ 'typeTourId': -1 }", fields = "{ 'typeTourId': 1 }")
-    Optional<TypeTour> findTopByOrderByTypeTourIdDesc();
+    void deleteById(ObjectId id);
 
-    void deleteByTypeTourId(String typeTourId);
+    void deleteByName(String name);
 
     List<TypeTour> findAllByTypeId(String typeId);
 

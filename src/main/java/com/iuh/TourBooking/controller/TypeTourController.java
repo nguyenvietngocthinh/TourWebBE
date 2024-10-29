@@ -10,6 +10,7 @@ import com.iuh.TourBooking.models.dto.response.TypeTourResponse;
 import com.iuh.TourBooking.service.TypeTourService;
 import com.iuh.TourBooking.service.UserService;
 import jakarta.validation.Valid;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,16 +37,14 @@ public class TypeTourController {
     }
 
 
-
-
-    @PutMapping("/{typeTourId}")
-    private TypeTourResponse updateTypeTour(@PathVariable String typeTourId , @RequestBody TypeTourUpdateRequest typeTourUpdateRequest) {
-        return typeTourService.updateTypeTour(typeTourId, typeTourUpdateRequest);
+    @PutMapping("/{id}")
+    private TypeTourResponse updateTypeTour(@PathVariable ObjectId id , @RequestBody TypeTourUpdateRequest typeTourUpdateRequest) {
+        return typeTourService.updateTypeTour(id, typeTourUpdateRequest);
     }
 
-    @DeleteMapping("{typeTourId}")
-    private ApiResponse<String> deleteTypeTour(@PathVariable String typeTourId) {
-        typeTourService.deleteTypeTour(typeTourId);
+    @DeleteMapping("/{name}")
+    private ApiResponse<String> deleteTypeTour(@PathVariable String name) {
+        typeTourService.deleteTypeTour(name);
         return ApiResponse.<String>builder().result("Type Tour has been deleted").build();
     }
 

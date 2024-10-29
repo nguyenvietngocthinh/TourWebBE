@@ -11,7 +11,6 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TypeTourResponse {
-    private String typeTourId;
     private String name;
     private String typeId;
 }
