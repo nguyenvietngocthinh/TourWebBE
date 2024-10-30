@@ -6,4 +6,6 @@ public class Coupon {
     private ObjectId id;
     private String codeCoupon;
     private int discount;
+    private int description;
+    private boolean isActive;
 }
