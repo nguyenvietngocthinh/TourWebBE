@@ -38,7 +38,8 @@ public class SecurityConfig {
     };
 
     private final String[] PUBLIC_ENDPOINTS_GET = {
-            "/tours"
+            "/tours",
+            "/typetours"
     };
 
     // Dung de tao token va chong hacker

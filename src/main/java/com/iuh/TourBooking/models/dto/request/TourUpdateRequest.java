@@ -15,20 +15,17 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TourUpdateRequest {
-    private String name;
-    private String description;
-    private String image;
-    private String typeTourId;
-    private String typeId;
-    private String locationStart;
-    private String locationFinish;
-    private List<LocalDate> availableDates;  // Chứa nhiều ngày khởi hành
-    private String timeDate;
-    private String endDate;
+
+    private String name;// Tên tour
+    private String description;// Mô tả
+    private String image; // Hình ảnh
+    private String typeTourId; // Loại
+    private String typeId;// Loại tour
+    private String locationStart; // Điểm khởi hành
+    private String locationFinish;  // Điểm kết thúc
+    private List<String> startDay; // Ngày khởi hành
+    private String durationTour;    // 2 Ngày 1 đêm
     private Double price;
-    private Integer maxPeople;
-    private Integer currentPeople;
     private String vehicle;
-    private String note;
     private Boolean isActive;
 }
