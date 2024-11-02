@@ -17,4 +17,5 @@ public interface TourService {
     public TourResponse updateTour(ObjectId id, TourUpdateRequest tourUpdateRequest);
     public void deleteTour(String tourCode);
     public List<TourResponse> getAllTour();
+    public List<TourResponse> getToursByTypeId(String typeTourId);
 }

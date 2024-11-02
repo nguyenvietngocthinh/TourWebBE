@@ -48,4 +48,11 @@ public class TourController {
         tourService.deleteTour(tourCode);
         return ApiResponse.<String>builder().result("Tour has been deleted").build();
     }
+
+    @GetMapping("/by-type/{typeId}")
+    public ApiResponse<List<TourResponse>> getToursByTypeId(@PathVariable String typeId) {
+        return ApiResponse.<List<TourResponse>>builder()
+                .result(tourService.getToursByTypeId(typeId))
+                .build();
+    }
 }

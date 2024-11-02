@@ -85,4 +85,12 @@ public class TourServiceImpl implements TourService {
                 .map(tourMapper::toTourResponse)
                 .toList();
     }
+
+    @Override
+    public List<TourResponse> getToursByTypeId(String typeId) {
+        List<Tour> tours = tourRepository.findAllByTypeId(typeId);
+        return tours.stream()
+                .map(tourMapper::toTourResponse)
+                .toList();
+    }
 }
