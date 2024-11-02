@@ -25,4 +25,6 @@ public interface TypeTourRepository extends MongoRepository<TypeTour, ObjectId> 
 
     List<TypeTour> findAllByTypeId(String typeId);
 
+    List<TypeTour> findAllByName(String name);
+
 }

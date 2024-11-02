@@ -22,4 +22,6 @@ public interface TourRepository extends MongoRepository<Tour, ObjectId> {
     void deleteByTourCode(String tourCode);
 
     List<Tour> findAllByTypeId(String typeId);
+
+    List<Tour> findAllByTypeTourName(String typeTourName);
 }

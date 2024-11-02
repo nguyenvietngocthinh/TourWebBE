@@ -22,6 +22,7 @@ public class BookingCreateRequest {
     private List<Customer> customers;
     private String note;
 
+    private String tourCode;
     private String typePay;
     private double totalMoney;
     private boolean isPay;

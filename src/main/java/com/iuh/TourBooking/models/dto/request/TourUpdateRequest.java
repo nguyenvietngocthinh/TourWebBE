@@ -19,7 +19,7 @@ public class TourUpdateRequest {
     private String name;// Tên tour
     private String description;// Mô tả
     private String image; // Hình ảnh
-    private String typeTourId; // Loại
+    private String typeTourName; // Loại
     private String typeId;// Loại tour
     private String locationStart; // Điểm khởi hành
     private String locationFinish;  // Điểm kết thúc

@@ -19,4 +19,6 @@ public interface TypeTourService {
 
     List<TypeTourResponse> getTypeToursByTypeId(String typeId);
 
+    List<TypeTourResponse> getTypeToursByName(String name);
+
 }

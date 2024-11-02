@@ -18,4 +18,6 @@ public interface TourService {
     public void deleteTour(String tourCode);
     public List<TourResponse> getAllTour();
     public List<TourResponse> getToursByTypeId(String typeTourId);
+
+    public List<TourResponse> getToursByTypeTourName(String typeTourName);
 }

@@ -55,4 +55,11 @@ public class TypeTourController {
                 .build();
     }
 
+    @GetMapping("/by-typename/{name}")
+    public ApiResponse<List<TypeTourResponse>> getTypeToursByName(@PathVariable String name) {
+        return ApiResponse.<List<TypeTourResponse>>builder()
+                .result(typeTourService.getTypeToursByName(name))
+                .build();
+    }
+
 }

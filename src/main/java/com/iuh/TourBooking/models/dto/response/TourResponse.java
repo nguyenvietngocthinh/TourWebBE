@@ -19,7 +19,7 @@ public class TourResponse {
     private String name;
     private String description;
     private String image;
-    private String typeTourId;
+    private String typeTourName;
     private String typeId;
     private String locationStart;
     private String locationFinish;
