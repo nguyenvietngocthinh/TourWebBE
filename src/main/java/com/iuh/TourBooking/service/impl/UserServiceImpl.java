@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -36,6 +37,8 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    KafkaTemplate<String, String> kafkaTemplate;
     @Override
     public UserResponse createUser(UserCreateRequest userCreateRequest) {
         if (userRepository.existsByEmail(userCreateRequest.getEmail())) {
@@ -67,6 +70,8 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(userCreateRequest.getPassword()));
 
         user.setIsOnline(false);
+
+
 
         return userMapper.toUserResponse(userRepository.save(user));
     }

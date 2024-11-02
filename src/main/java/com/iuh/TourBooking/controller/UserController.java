@@ -7,8 +7,10 @@ import com.iuh.TourBooking.models.dto.response.ApiResponse;
 import com.iuh.TourBooking.models.dto.response.UserResponse;
 import com.iuh.TourBooking.service.UserService;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,9 +19,12 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/users")
+@Slf4j
 public class UserController{
     @Autowired
     private UserService userService;
+
+
 
     @PostMapping
     private ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreateRequest userCreateRequest) {

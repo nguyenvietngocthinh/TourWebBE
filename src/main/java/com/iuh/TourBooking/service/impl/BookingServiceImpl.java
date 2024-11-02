@@ -11,6 +11,7 @@ import com.iuh.TourBooking.models.dto.response.BookingResponse;
 import com.iuh.TourBooking.models.dto.response.TourResponse;
 import com.iuh.TourBooking.repository.BookingRepository;
 import com.iuh.TourBooking.service.BookingService;
+import com.iuh.TourBooking.service.EmailSenderService;
 import com.iuh.TourBooking.utils.BookingGenerateCode;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,9 @@ public class BookingServiceImpl implements BookingService {
     @Autowired
     private BookingMapper bookingMapper;
 
+    @Autowired
+    private EmailSenderService emailSenderService;
+
     @Override
     public BookingResponse createBooking(BookingCreateRequest bookingCreateRequest) {
 
@@ -40,6 +44,10 @@ public class BookingServiceImpl implements BookingService {
 
         // Chuyển đổi từ DTO sang entity Booking
         Booking booking = bookingMapper.toBooking(bookingCreateRequest);
+
+        // Gửi email với mã booking code
+        String emailBody = "Đặt chỗ của bạn đã được tạo thành công. Mã đặt chỗ của bạn là: " + bookingCode;
+        emailSenderService.send(bookingCreateRequest.getEmailContract(), "Xác nhận đặt chỗ", emailBody);
 
         // Lưu booking vào cơ sở dữ liệu và trả về response
         return bookingMapper.toBookingResponse(bookingRepository.save(booking));
