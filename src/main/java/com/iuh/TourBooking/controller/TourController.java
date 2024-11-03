@@ -70,4 +70,11 @@ public class TourController {
                 .build();
     }
 
+    @GetMapping("/by-id/{id}")
+    public ApiResponse<TourResponse> getTourById(@PathVariable ObjectId id) {
+        return ApiResponse.<TourResponse>builder()
+                .result(tourService.getTourById(id))
+                .build();
+    }
+
 }

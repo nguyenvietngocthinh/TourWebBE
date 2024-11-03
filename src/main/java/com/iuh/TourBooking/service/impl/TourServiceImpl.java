@@ -108,4 +108,11 @@ public class TourServiceImpl implements TourService {
         return tourMapper.toTourResponse(tour);
     }
 
+    @Override
+    public TourResponse getTourById(ObjectId id) {
+        Tour tour = tourRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.TOUR_NOTFOUND));
+        return tourMapper.toTourResponse(tour);
+    }
+
 }

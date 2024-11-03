@@ -22,4 +22,6 @@ public interface TourService {
     public List<TourResponse> getToursByTypeTourName(String typeTourName);
 
     public TourResponse getTourByTourCode(String tourCode);
+
+    public TourResponse getTourById(ObjectId id);
 }
