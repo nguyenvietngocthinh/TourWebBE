@@ -39,9 +39,19 @@ public class TourController {
     }
 
     @PutMapping("/{id}")
-    private TourResponse updateTour(@PathVariable ObjectId id, @RequestBody TourUpdateRequest tourUpdateRequest) {
-        return tourService.updateTour(id, tourUpdateRequest);
+    private TourResponse updateTour(@PathVariable ObjectId id,
+                                    @RequestPart(value = "tour") TourUpdateRequest tourUpdateRequest,
+                                    @RequestPart(value = "image", required = false) MultipartFile image) {
+        return tourService.updateTour(id, tourUpdateRequest, image);
     }
+
+    @PutMapping("/by-tourcode/{tourCode}")
+    private TourResponse updateTourByTourCode(@PathVariable String tourCode,
+                                    @RequestPart(value = "tour") TourUpdateRequest tourUpdateRequest,
+                                    @RequestPart(value = "image", required = false) MultipartFile image) {
+        return tourService.updateTourByTourCode(tourCode, tourUpdateRequest, image);
+    }
+
 
     @DeleteMapping("/{tourCode}")
     private ApiResponse<String> deleteTour(@PathVariable String tourCode) {

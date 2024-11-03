@@ -65,14 +65,41 @@ public class TourServiceImpl implements TourService {
 
 
     @Override
-    public TourResponse updateTour(ObjectId id, TourUpdateRequest tourUpdateRequest) {
+    public TourResponse updateTour(ObjectId id, TourUpdateRequest tourUpdateRequest, MultipartFile image) {
         Tour tour = tourRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Tour not found"));
 
+        // Cập nhật các trường của tour từ yêu cầu cập nhật
         tourMapper.updateTour(tour, tourUpdateRequest);
 
+        // Nếu có hình ảnh mới được cung cấp, tải lên và cập nhật URL hình ảnh của tour
+        if (image != null && !image.isEmpty()) {
+            String imageUrl = s3Service.uploadFile(image); // Tải lên hình ảnh mới
+            tour.setImage(imageUrl); // Cập nhật URL hình ảnh mới
+        }
+
+        // Lưu tour đã cập nhật vào repository và trả về phản hồi
         return tourMapper.toTourResponse(tourRepository.save(tour));
     }
+
+    @Override
+    public TourResponse updateTourByTourCode(String tourCode, TourUpdateRequest tourUpdateRequest, MultipartFile image) {
+        Tour tour = tourRepository.findByTourCode(tourCode)
+                .orElseThrow(() -> new RuntimeException("Tour not found"));
+
+        // Cập nhật các trường của tour từ yêu cầu cập nhật
+        tourMapper.updateTour(tour, tourUpdateRequest);
+
+        // Nếu có hình ảnh mới được cung cấp, tải lên và cập nhật URL hình ảnh của tour
+        if (image != null && !image.isEmpty()) {
+            String imageUrl = s3Service.uploadFile(image); // Tải lên hình ảnh mới
+            tour.setImage(imageUrl); // Cập nhật URL hình ảnh mới
+        }
+
+        // Lưu tour đã cập nhật vào repository và trả về phản hồi
+        return tourMapper.toTourResponse(tourRepository.save(tour));
+    }
+
 
     @Override
     public void deleteTour(String tourCode) {

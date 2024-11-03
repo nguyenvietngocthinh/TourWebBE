@@ -14,7 +14,9 @@ import java.util.List;
 public interface TourService {
     public TourResponse createTour(TourCreateRequest tourCreateRequest, MultipartFile image);
 
-    public TourResponse updateTour(ObjectId id, TourUpdateRequest tourUpdateRequest);
+    public TourResponse updateTour(ObjectId id, TourUpdateRequest tourUpdateRequest, MultipartFile image);
+
+    public TourResponse updateTourByTourCode(String tourCode, TourUpdateRequest tourUpdateRequest, MultipartFile image);
     public void deleteTour(String tourCode);
     public List<TourResponse> getAllTour();
     public List<TourResponse> getToursByTypeId(String typeTourId);
