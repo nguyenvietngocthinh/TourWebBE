@@ -25,6 +25,7 @@ public enum ErrorCode {
     UPLOADIMAGE_FAIL(1011, "Up file image fail", HttpStatus.BAD_REQUEST),
     INVALID_TYPETOUR_ID_FORMAT(1012, "Invalid typeTourId format", HttpStatus.BAD_REQUEST),
     BOOKING_EXISTED(1013, "Booking existed", HttpStatus.BAD_REQUEST),
+    TOUR_NOTFOUND(1014, "Tour not found", HttpStatus.BAD_REQUEST),
     ;
 
     private int code;

@@ -45,7 +45,7 @@ public class TourServiceImpl implements TourService {
 
         // Kiểm tra mã tour có tồn tại chưa
         if (tourRepository.existsByTourCode(tourCreateRequest.getTourCode())) {
-            throw new AppException(ErrorCode.TOUR_EXISTED);
+                throw new AppException(ErrorCode.TOUR_EXISTED);
         }
 
         // Khởi tạo tour từ request
@@ -101,4 +101,11 @@ public class TourServiceImpl implements TourService {
                 .map(tourMapper::toTourResponse)
                 .toList();
     }
+    @Override
+    public TourResponse getTourByTourCode(String tourCode) {
+        Tour tour = tourRepository.findByTourCode(tourCode)
+                .orElseThrow(() -> new AppException(ErrorCode.TOUR_NOTFOUND));
+        return tourMapper.toTourResponse(tour);
+    }
+
 }

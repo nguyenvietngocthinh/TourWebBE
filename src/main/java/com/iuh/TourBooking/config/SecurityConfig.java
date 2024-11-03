@@ -41,7 +41,8 @@ public class SecurityConfig {
             "/tours",
             "/typetours",
             "/tours/by-type/**",
-            "/tours/by-typetourname/**"
+            "/tours/by-typetourname/**",
+            "/tours/by-tourcode/**",
     };
 
     // Dung de tao token va chong hacker

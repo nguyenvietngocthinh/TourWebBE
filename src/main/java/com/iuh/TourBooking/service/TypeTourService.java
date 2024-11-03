@@ -21,4 +21,6 @@ public interface TypeTourService {
 
     List<TypeTourResponse> getTypeToursByName(String name);
 
+
+
 }

@@ -62,4 +62,12 @@ public class TourController {
                 .result(tourService.getToursByTypeTourName(typeTourName))
                 .build();
     }
+
+    @GetMapping("/by-tourcode/{tourCode}")
+    public ApiResponse<TourResponse> getTourByTourCode(@PathVariable String tourCode) {
+        return ApiResponse.<TourResponse>builder()
+                .result(tourService.getTourByTourCode(tourCode))
+                .build();
+    }
+
 }
