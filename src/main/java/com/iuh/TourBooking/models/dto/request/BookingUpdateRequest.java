@@ -14,14 +14,17 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BookingUpdateRequest {
-    private String usernameContract;
-    private String emailContract;
-    private String phoneNumberContract;
-    private String address;
-    private List<Customer> customers;
+    private String customerName;
+    private String customerEmail;
+    private String customerPhoneNumber;
+    private String customerCity;
+    private String customerDistrict;
+    private String customerAddress;
+    private int numberOfCustomer;
     private String note;
 
     private String tourCode;
+
     private String typePay;
     private double totalMoney;
     private boolean isPay;

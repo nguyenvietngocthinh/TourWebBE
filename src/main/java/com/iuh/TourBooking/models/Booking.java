@@ -20,11 +20,13 @@ public class Booking {
     private ObjectId id;
 
     private String bookingCode;
-    private String usernameContract;
-    private String emailContract;
-    private String phoneNumberContract;
-    private String address;
-    private List<Customer> customers;
+    private String customerName;
+    private String customerEmail;
+    private String customerPhoneNumber;
+    private String customerCity;
+    private String customerDistrict;
+    private String customerAddress;
+    private int numberOfCustomer;
     private String note;
 
     private String tourCode;

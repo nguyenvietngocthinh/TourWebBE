@@ -27,4 +27,7 @@ public class UserResponse {
     Boolean isOnline;
     Set<String> roles;
 
+    public String getIdAsString() {
+        return id != null ? id.toHexString() : null;
+    }
 }
