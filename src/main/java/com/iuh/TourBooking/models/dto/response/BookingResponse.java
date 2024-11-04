@@ -31,4 +31,5 @@ public class BookingResponse {
     private String typePay;
     private double totalMoney;
     private boolean isPay;
+    private boolean isActive;
 }
