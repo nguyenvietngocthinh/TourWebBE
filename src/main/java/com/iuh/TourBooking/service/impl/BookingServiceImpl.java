@@ -44,10 +44,12 @@ public class BookingServiceImpl implements BookingService {
 
         // Chuyển đổi từ DTO sang entity Booking
         Booking booking = bookingMapper.toBooking(bookingCreateRequest);
+        booking.setPay(false);
+        booking.setActive(true);
 
         // Gửi email với mã booking code
         String emailBody = "Đặt chỗ của bạn đã được tạo thành công. Mã đặt chỗ của bạn là: " + bookingCode;
-        emailSenderService.send(bookingCreateRequest.getEmailContract(), "Xác nhận đặt chỗ", emailBody);
+        emailSenderService.send(bookingCreateRequest.getCustomerEmail(), "Xác nhận đặt chỗ", emailBody);
 
         // Lưu booking vào cơ sở dữ liệu và trả về response
         return bookingMapper.toBookingResponse(bookingRepository.save(booking));
