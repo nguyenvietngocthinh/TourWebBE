@@ -1,17 +1,17 @@
-package com.iuh.TourBooking.models;
+package com.iuh.TourBooking.models.dto.response;
 
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.bson.types.ObjectId;
-import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "coupons")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
-public class Coupon {
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class CouponResponse {
     private ObjectId id;
     private String codeCoupon;
     private int discount;

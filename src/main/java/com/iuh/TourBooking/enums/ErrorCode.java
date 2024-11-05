@@ -26,6 +26,7 @@ public enum ErrorCode {
     INVALID_TYPETOUR_ID_FORMAT(1012, "Invalid typeTourId format", HttpStatus.BAD_REQUEST),
     BOOKING_EXISTED(1013, "Booking existed", HttpStatus.BAD_REQUEST),
     TOUR_NOTFOUND(1014, "Tour not found", HttpStatus.BAD_REQUEST),
+    COUPON_EXISTED(1015, "Coupon existed", HttpStatus.BAD_REQUEST),
     ;
 
     private int code;
