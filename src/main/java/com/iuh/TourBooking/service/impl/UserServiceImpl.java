@@ -87,8 +87,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse updateUserByUserId(ObjectId userId, UserUpdateRequest userUpdateRequest) {
-        User user = userRepository.findById(userId)
+    public UserResponse updateUserById(ObjectId id, UserUpdateRequest userUpdateRequest) {
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         userMapper.updateUser(user, userUpdateRequest);

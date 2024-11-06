@@ -22,6 +22,8 @@ public class BookingCreateRequest {
     private String customerDistrict;
     private String customerAddress;
     private int numberOfCustomer;
+    private String bookingDate;
+    private String expectedDate;
     private String note;
 
     private String tourCode;

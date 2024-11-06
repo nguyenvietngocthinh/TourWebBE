@@ -80,7 +80,7 @@ public class UserController{
 
     @PutMapping("/id/{userId}")
     private UserResponse updateUserByUserId(@PathVariable ObjectId userId ,@RequestBody UserUpdateRequest userUpdateRequest) {
-        return userService.updateUserByUserId(userId, userUpdateRequest);
+        return userService.updateUserById(userId, userUpdateRequest);
     }
 
 

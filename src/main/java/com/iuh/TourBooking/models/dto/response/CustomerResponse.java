@@ -1,11 +1,11 @@
 package com.iuh.TourBooking.models.dto.response;
 
-import com.iuh.TourBooking.models.Customer;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.bson.types.ObjectId;
 
-import java.util.List;
+import java.util.Date;
+
 
 @Data
 @NoArgsConstructor
@@ -14,24 +14,18 @@ import java.util.List;
 @Setter
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class BookingResponse {
+public class CustomerResponse {
     private ObjectId id;
-    private String bookingCode;
     private String customerName;
     private String customerEmail;
     private String customerPhoneNumber;
+    private Date CustomerDateOfBirth;
+    private String customerType;
     private String customerCity;
     private String customerDistrict;
     private String customerAddress;
-    private int numberOfCustomer;
-    private String bookingDate;
-    private String expectedDate;
-    private String note;
 
-    private String tourCode;
-
-    private String typePay;
-    private double totalMoney;
-    private boolean isPay;
-    private boolean isActive;
+    public String getIdAsString() {
+        return id != null ? id.toHexString() : null;
+    }
 }

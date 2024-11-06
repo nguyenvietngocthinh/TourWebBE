@@ -27,6 +27,7 @@ public enum ErrorCode {
     BOOKING_EXISTED(1013, "Booking existed", HttpStatus.BAD_REQUEST),
     TOUR_NOTFOUND(1014, "Tour not found", HttpStatus.BAD_REQUEST),
     COUPON_EXISTED(1015, "Coupon existed", HttpStatus.BAD_REQUEST),
+    CUSTOMER_EXISTED(1016, "Customer existed", HttpStatus.BAD_REQUEST),
     ;
 
     private int code;
