@@ -16,5 +16,5 @@ public class CouponResponse {
     private String codeCoupon;
     private int discount;
     private String description;
-    private boolean isActive;
+    private boolean activeCoupon;
 }

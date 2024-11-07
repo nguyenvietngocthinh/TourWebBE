@@ -7,6 +7,7 @@ import com.iuh.TourBooking.models.dto.request.TypeUpdateRequest;
 import com.iuh.TourBooking.models.dto.response.ApiResponse;
 import com.iuh.TourBooking.models.dto.response.TypeResponse;
 import com.iuh.TourBooking.models.dto.response.TypeTourResponse;
+import com.iuh.TourBooking.models.dto.response.UserResponse;
 import com.iuh.TourBooking.service.TypeTourService;
 import com.iuh.TourBooking.service.UserService;
 import jakarta.validation.Valid;
@@ -59,6 +60,18 @@ public class TypeTourController {
     public ApiResponse<List<TypeTourResponse>> getTypeToursByName(@PathVariable String name) {
         return ApiResponse.<List<TypeTourResponse>>builder()
                 .result(typeTourService.getTypeToursByName(name))
+                .build();
+    }
+
+    @GetMapping("/search")
+    public ApiResponse<List<TypeTourResponse>> searchTypeTours(
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "limit", defaultValue = "1") int limit) {
+
+        List<TypeTourResponse>  typeTours = typeTourService.searchTypeTours(name, limit);
+
+        return ApiResponse.<List<TypeTourResponse>>builder()
+                .result(typeTours)
                 .build();
     }
 

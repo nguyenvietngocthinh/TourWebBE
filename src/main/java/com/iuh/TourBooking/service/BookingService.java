@@ -12,7 +12,13 @@ import java.util.List;
 public interface BookingService {
     public BookingResponse createBooking(BookingCreateRequest bookingCreateRequest);
 
+    public BookingResponse createBookingAdmin(BookingCreateRequest bookingCreateRequest);
+
     public BookingResponse updateBooking(ObjectId id, BookingUpdateRequest bookingUpdateRequest);
     public void deleteBooking(String bookingCode);
     public List<BookingResponse> getAllBooking();
+
+    public BookingResponse getBookingByBookingCode(String bookingCode);
+
+    public BookingResponse updateBookingCode(String bookingCode, BookingUpdateRequest bookingUpdateRequest);
 }

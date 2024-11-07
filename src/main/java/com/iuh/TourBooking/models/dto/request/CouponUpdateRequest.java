@@ -13,5 +13,5 @@ import lombok.experimental.FieldDefaults;
 public class CouponUpdateRequest {
     private int discount;
     private String description;
-    private boolean isActive;
+    private boolean activeCoupon;
 }

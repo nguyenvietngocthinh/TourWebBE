@@ -40,7 +40,7 @@ public class CouponServiceImpl implements CouponService {
 
         Coupon coupon = couponMapper.toCoupon(couponCreateRequest);
 
-        coupon.setActive(true);
+        coupon.setActiveCoupon(true);
         return couponMapper.toCouponResponse(couponRepository.save(coupon));
     }
 

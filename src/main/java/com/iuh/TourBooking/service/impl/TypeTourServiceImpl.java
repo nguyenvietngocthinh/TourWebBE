@@ -5,13 +5,18 @@ import com.iuh.TourBooking.exception.AppException;
 import com.iuh.TourBooking.mappers.TypeTourMapper;
 import com.iuh.TourBooking.models.Type;
 import com.iuh.TourBooking.models.TypeTour;
+import com.iuh.TourBooking.models.User;
 import com.iuh.TourBooking.models.dto.request.TypeTourCreateRequest;
 import com.iuh.TourBooking.models.dto.request.TypeTourUpdateRequest;
 import com.iuh.TourBooking.models.dto.response.TypeTourResponse;
+import com.iuh.TourBooking.models.dto.response.UserResponse;
 import com.iuh.TourBooking.repository.TypeTourRepository;
 import com.iuh.TourBooking.service.TypeTourService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +32,9 @@ public class TypeTourServiceImpl implements TypeTourService {
 
     @Autowired
     private TypeTourMapper typeTourMapper;
+
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
     @PreAuthorize("hasRole('ADMIN')")
     @Override
@@ -82,6 +90,24 @@ public class TypeTourServiceImpl implements TypeTourService {
         return typeTours.stream()
                 .map(typeTourMapper::toTypeTourResponse)
                 .toList();
+    }
+
+    @Override
+    public List<TypeTourResponse> searchTypeTours(String name, int limit) {
+        // Tạo query với các điều kiện lọc
+        Query query = new Query();
+
+        // Nếu tên người dùng được cung cấp, tìm kiếm theo tên
+        if (name != null && !name.isEmpty()) {
+            query.addCriteria(Criteria.where("name").regex(name, "i"));  // Tìm kiếm theo tên (không phân biệt chữ hoa/thường)
+        }
+        // Thực hiện tìm kiếm và trả về kết quả
+        List<TypeTour> typeTours = mongoTemplate.find(query, TypeTour.class);
+
+        // Chuyển đổi kết quả tìm kiếm thành danh sách UserResponse
+        return typeTours.stream()
+                .map(typeTourMapper::toTypeTourResponse)
+                .collect(Collectors.toList());
     }
 
 

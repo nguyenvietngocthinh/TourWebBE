@@ -98,4 +98,18 @@ public class UserController{
         userService.deleteUserByUserId(userId);
         return ApiResponse.<String>builder().result("User has been deleted").build();
     }
+
+    @GetMapping("/search")
+    public ApiResponse<List<UserResponse>> searchUsers(
+            @RequestParam(value = "username", required = false) String username,
+            @RequestParam(value = "email", required = false) String email,
+            @RequestParam(value = "phoneNumber", required = false) String phoneNumber,
+            @RequestParam(value = "limit", defaultValue = "3") int limit) {
+
+        List<UserResponse> users = userService.searchUsers(username, email, phoneNumber, limit);
+
+        return ApiResponse.<List<UserResponse>>builder()
+                .result(users)
+                .build();
+    }
 }

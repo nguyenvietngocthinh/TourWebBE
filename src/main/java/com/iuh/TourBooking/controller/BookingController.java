@@ -28,6 +28,13 @@ public class BookingController {
                 .build();
     }
 
+    @PostMapping("/admin")
+    private ApiResponse<BookingResponse> createBookingAdmin(@RequestBody @Valid BookingCreateRequest bookingCreateRequest) {
+        return ApiResponse.<BookingResponse>builder()
+                .result(bookingService.createBookingAdmin(bookingCreateRequest))
+                .build();
+    }
+
     @GetMapping
     ApiResponse<List<BookingResponse>> getAllBookings() {
         return ApiResponse.<List<BookingResponse>>builder()
@@ -40,9 +47,21 @@ public class BookingController {
         return bookingService.updateBooking(id, bookingUpdateRequest);
     }
 
+    @PutMapping("/bookingCode/{bookingCode}")
+    private BookingResponse updateBookingByBookingCode(@PathVariable String bookingCode, @RequestBody BookingUpdateRequest bookingUpdateRequest) {
+        return bookingService.updateBookingCode(bookingCode, bookingUpdateRequest);
+    }
+
     @DeleteMapping("/{bookingCode}")
     private ApiResponse<String> deleteTour(@PathVariable String bookingCode) {
         bookingService.deleteBooking(bookingCode);
         return ApiResponse.<String>builder().result("Booking has been deleted").build();
+    }
+
+    @GetMapping("/by-bookingcode/{bookingCode}")
+    public ApiResponse<BookingResponse> getBookingByBookingCode(@PathVariable String bookingCode) {
+        return ApiResponse.<BookingResponse>builder()
+                .result(bookingService.getBookingByBookingCode(bookingCode))
+                .build();
     }
 }

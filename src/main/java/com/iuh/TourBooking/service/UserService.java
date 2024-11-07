@@ -21,4 +21,6 @@ public interface UserService {
     public UserResponse getUserByEmail(String email);
     public UserResponse getUserByUserId(ObjectId userId);
     public UserResponse getMyinfo();
+
+    public List<UserResponse> searchUsers(String username, String email, String phoneNumber, int limit);
 }

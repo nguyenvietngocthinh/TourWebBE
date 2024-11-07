@@ -7,6 +7,7 @@ import com.iuh.TourBooking.models.Booking;
 import com.iuh.TourBooking.models.Tour;
 import com.iuh.TourBooking.models.dto.request.BookingCreateRequest;
 import com.iuh.TourBooking.models.dto.request.BookingUpdateRequest;
+import com.iuh.TourBooking.models.dto.request.TourUpdateRequest;
 import com.iuh.TourBooking.models.dto.response.BookingResponse;
 import com.iuh.TourBooking.models.dto.response.TourResponse;
 import com.iuh.TourBooking.repository.BookingRepository;
@@ -16,6 +17,7 @@ import com.iuh.TourBooking.utils.BookingGenerateCode;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -44,12 +46,36 @@ public class BookingServiceImpl implements BookingService {
 
         // Chuyển đổi từ DTO sang entity Booking
         Booking booking = bookingMapper.toBooking(bookingCreateRequest);
-        booking.setPay(false);
-        booking.setActive(true);
+        booking.setPayBooking(false);
+        booking.setActiveBooking(true);
 
         // Gửi email với mã booking code
-        String emailBody = "Đặt chỗ của bạn đã được tạo thành công. Mã đặt chỗ của bạn là: " + bookingCode;
-        emailSenderService.send(bookingCreateRequest.getCustomerEmail(), "Xác nhận đặt chỗ", emailBody);
+        //String emailBody = "Đặt chỗ của bạn đã được tạo thành công. Mã đặt chỗ của bạn là: " + bookingCode;
+        //emailSenderService.send(bookingCreateRequest.getCustomerEmail(), "Xác nhận đặt chỗ", emailBody);
+
+        // Lưu booking vào cơ sở dữ liệu và trả về response
+        return bookingMapper.toBookingResponse(bookingRepository.save(booking));
+    }
+
+    @Override
+    public BookingResponse createBookingAdmin(BookingCreateRequest bookingCreateRequest) {
+
+        // Sinh mã bookingCode và kiểm tra trùng lặp
+        String bookingCode;
+        do {
+            bookingCode = BookingGenerateCode.generateBookingCode();
+        } while (bookingRepository.existsByBookingCode(bookingCode));
+
+        // Đặt mã bookingCode đã được tạo vào đối tượng booking
+        bookingCreateRequest.setBookingCode(bookingCode);
+
+        // Chuyển đổi từ DTO sang entity Booking
+        Booking booking = bookingMapper.toBooking(bookingCreateRequest);
+        booking.setActiveBooking(true);
+
+        // Gửi email với mã booking code
+        //String emailBody = "Đặt chỗ của bạn đã được tạo thành công. Mã đặt chỗ của bạn là: " + bookingCode;
+        //emailSenderService.send(bookingCreateRequest.getCustomerEmail(), "Xác nhận đặt chỗ", emailBody);
 
         // Lưu booking vào cơ sở dữ liệu và trả về response
         return bookingMapper.toBookingResponse(bookingRepository.save(booking));
@@ -67,6 +93,16 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    public BookingResponse updateBookingCode(String bookingCode, BookingUpdateRequest bookingUpdateRequest) {
+        Booking booking = bookingRepository.findByBookingCode(bookingCode)
+                .orElseThrow(() -> new RuntimeException("Booking not found"));
+
+        bookingMapper.updateBooking(booking, bookingUpdateRequest);
+
+        return bookingMapper.toBookingResponse(bookingRepository.save(booking));
+    }
+
+    @Override
     public void deleteBooking(String bookingCode) {
         bookingRepository.deleteByBookingCode(bookingCode);
     }
@@ -76,5 +112,12 @@ public class BookingServiceImpl implements BookingService {
         return bookingRepository.findAll().stream()
                 .map(bookingMapper::toBookingResponse)
                 .toList();
+    }
+
+    @Override
+    public BookingResponse getBookingByBookingCode(String bookingCode) {
+        Booking booking = bookingRepository.findByBookingCode(bookingCode)
+                .orElseThrow(() -> new AppException(ErrorCode.BOOKING_NOTFOUND));
+        return bookingMapper.toBookingResponse(booking);
     }
 }

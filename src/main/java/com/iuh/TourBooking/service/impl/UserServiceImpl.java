@@ -14,6 +14,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,9 +26,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -39,6 +44,10 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     KafkaTemplate<String, String> kafkaTemplate;
+
+    @Autowired
+    private MongoTemplate mongoTemplate;
+
     @Override
     public UserResponse createUser(UserCreateRequest userCreateRequest) {
         if (userRepository.existsByEmail(userCreateRequest.getEmail())) {
@@ -151,6 +160,41 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         return userMapper.toUserResponse(user);
+    }
+
+    @Override
+    public List<UserResponse> searchUsers(String username, String email, String phoneNumber, int limit) {
+        // Tạo query với các điều kiện lọc
+        Query query = new Query();
+
+        // Nếu tên người dùng được cung cấp, tìm kiếm theo tên
+        if (username != null && !username.isEmpty()) {
+            query.addCriteria(Criteria.where("username").regex(username, "i"));  // Tìm kiếm theo tên (không phân biệt chữ hoa/thường)
+        }
+
+        // Nếu email được cung cấp, tìm kiếm theo email
+        if (email != null && !email.isEmpty()) {
+            query.addCriteria(Criteria.where("email").regex(email, "i"));  // Tìm kiếm theo email
+        }
+
+        // Nếu số điện thoại được cung cấp, tìm kiếm theo số điện thoại
+        if (phoneNumber != null && !phoneNumber.isEmpty()) {
+            query.addCriteria(Criteria.where("phoneNumber").regex(phoneNumber, "i"));  // Tìm kiếm theo số điện thoại
+        }
+
+        // Loại trừ tài khoản có email là admin@gmail.com
+        query.addCriteria(Criteria.where("email").ne("admin@gmail.com"));
+
+        // Giới hạn số lượng kết quả trả về
+        query.limit(limit > 0 ? limit : 3);  // Mặc định trả về 3 kết quả nếu không có tham số giới hạn
+
+        // Thực hiện tìm kiếm và trả về kết quả
+        List<User> users = mongoTemplate.find(query, User.class);
+
+        // Chuyển đổi kết quả tìm kiếm thành danh sách UserResponse
+        return users.stream()
+                .map(userMapper::toUserResponse)
+                .collect(Collectors.toList());
     }
 
 }
