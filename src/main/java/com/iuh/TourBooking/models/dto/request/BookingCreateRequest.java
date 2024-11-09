@@ -27,8 +27,6 @@ public class BookingCreateRequest {
     private String note;
 
     private String tourCode;
-    private boolean saleTour;
-    private int percentSale;
 
     private String typePay;
     private double totalMoney;

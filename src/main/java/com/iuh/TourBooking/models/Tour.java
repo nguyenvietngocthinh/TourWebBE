@@ -33,4 +33,8 @@ public class Tour {
     private Double price;
     private String vehicle;
     private Boolean isActive;
+
+    private boolean saleTour;
+    private int percentSale;
+
 }

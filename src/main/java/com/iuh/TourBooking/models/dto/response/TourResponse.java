@@ -30,6 +30,8 @@ public class TourResponse {
     private Double price;
     private String vehicle;
     private Boolean isActive;
+    private boolean saleTour;
+    private int percentSale;
     public String getIdAsString() {
         return id != null ? id.toHexString() : null;
     }
