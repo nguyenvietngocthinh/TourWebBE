@@ -58,13 +58,35 @@ public class BookingServiceImpl implements BookingService {
         booking.setPayBooking(false);
         booking.setActiveBooking(true);
 
-        // Gửi email với mã booking code
-        //String emailBody = "Đặt chỗ của bạn đã được tạo thành công. Mã đặt chỗ của bạn là: " + bookingCode;
-        //emailSenderService.send(bookingCreateRequest.getCustomerEmail(), "Xác nhận đặt chỗ", emailBody);
+        // Tìm tour theo mã tourCode để lấy tên tour
+        Optional<Tour> tour = tourRepository.findByTourCode(bookingCreateRequest.getTourCode());
+        String tourName = tour.map(Tour::getName).orElse("N/A");
 
-        // Lưu booking vào cơ sở dữ liệu và trả về response
+        // Định dạng số tiền VNĐ
+        NumberFormat currencyFormatter = NumberFormat.getInstance(new Locale("vi", "VN"));
+        String formattedTotalMoney = currencyFormatter.format(bookingCreateRequest.getTotalMoney());
+
+        // Tạo nội dung email với thông tin chi tiết của booking
+        String emailBody = "Đặt chỗ của bạn đã được tạo thành công.\n" +
+                "Mã đặt chỗ: " + bookingCode + "\n" +
+                "Tên tour: " + tourName + "\n" +
+                "Thông tin khách hàng:\n" +
+                "- Tên: " + bookingCreateRequest.getCustomerName() + "\n" +
+                "- Email: " + bookingCreateRequest.getCustomerEmail() + "\n" +
+                "- Số điện thoại: " + bookingCreateRequest.getCustomerPhoneNumber() + "\n" +
+                "Chi tiết thanh toán:\n" +
+                "- Số tiền: " + formattedTotalMoney + " VNĐ\n" +
+                "- Phương thức thanh toán: " + bookingCreateRequest.getTypePay() + "\n" +
+                "- Trạng thái thanh toán: " + (bookingCreateRequest.isPayBooking() ? "Đã thanh toán" : "Chưa thanh toán");
+
+        // Gửi email cho khách hàng
+        emailSenderService.send(bookingCreateRequest.getCustomerEmail(), "Xác nhận đặt chỗ", emailBody);
+
+
         return bookingMapper.toBookingResponse(bookingRepository.save(booking));
     }
+
+
 
 
 
