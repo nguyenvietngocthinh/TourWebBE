@@ -5,9 +5,7 @@ import com.iuh.TourBooking.exception.AppException;
 import com.iuh.TourBooking.mappers.BookingMapper;
 import com.iuh.TourBooking.models.Booking;
 import com.iuh.TourBooking.models.Tour;
-import com.iuh.TourBooking.models.dto.request.BookingCreateRequest;
-import com.iuh.TourBooking.models.dto.request.BookingUpdateRequest;
-import com.iuh.TourBooking.models.dto.request.TourUpdateRequest;
+import com.iuh.TourBooking.models.dto.request.*;
 import com.iuh.TourBooking.models.dto.response.BookingResponse;
 import com.iuh.TourBooking.models.dto.response.TourResponse;
 import com.iuh.TourBooking.repository.BookingRepository;
@@ -156,6 +154,42 @@ public class BookingServiceImpl implements BookingService {
 
         return bookingMapper.toBookingResponse(bookingRepository.save(booking));
     }
+
+    @Override
+    public BookingResponse updateBookingToPendingCancel(String bookingCode) {
+        Booking booking = bookingRepository.findByBookingCode(bookingCode)
+                .orElseThrow(() -> new RuntimeException("Booking not found"));
+
+        // Cập nhật trạng thái activeBooking thành "Chờ hủy"
+        booking.setActiveBooking("Chờ hủy");
+
+        // Lưu lại booking với trạng thái đã cập nhật
+        return bookingMapper.toBookingResponse(bookingRepository.save(booking));
+    }
+
+    @Override
+    public BookingResponse updateBookingToCancelled(String bookingCode) {
+        // Tìm booking theo bookingCode
+        Booking booking = bookingRepository.findByBookingCode(bookingCode)
+                .orElseThrow(() -> new RuntimeException("Booking not found"));
+
+        // Cập nhật trạng thái activeBooking thành "Đã hủy"
+        booking.setActiveBooking("Đã hủy");
+
+        // Lưu lại booking với trạng thái đã cập nhật
+        Booking updatedBooking = bookingRepository.save(booking);
+
+        // Tạo nội dung email thông báo hủy booking
+        String emailBody = "Đặt chỗ của bạn với mã đặt chỗ " + bookingCode + " đã được hủy thành công." ;
+
+        // Gửi email thông báo đến khách hàng
+        emailSenderService.send(booking.getCustomerEmail(), "Thông báo hủy đặt chỗ", emailBody);
+
+        // Trả về booking response
+        return bookingMapper.toBookingResponse(updatedBooking);
+    }
+
+
 
     @Override
     public void deleteBooking(String bookingCode) {

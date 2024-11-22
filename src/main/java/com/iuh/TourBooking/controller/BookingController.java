@@ -64,4 +64,24 @@ public class BookingController {
                 .result(bookingService.getBookingByBookingCode(bookingCode))
                 .build();
     }
+
+    // API để cập nhật trạng thái thành "Chờ hủy"
+    @PutMapping("/pendingcancel/{bookingCode}")
+    public ApiResponse<BookingResponse> updateBookingToPendingCancel(
+            @PathVariable String bookingCode) {
+        BookingResponse bookingResponse = bookingService.updateBookingToPendingCancel(bookingCode);
+        return ApiResponse.<BookingResponse>builder()
+                .result(bookingResponse)
+                .build();
+    }
+
+    // API để cập nhật trạng thái thành "Đã hủy" và gửi email
+    @PutMapping("/cancel/{bookingCode}")
+    public ApiResponse<BookingResponse> updateBookingToCancelled(
+            @PathVariable String bookingCode) {
+        BookingResponse bookingResponse = bookingService.updateBookingToCancelled(bookingCode);
+        return ApiResponse.<BookingResponse>builder()
+                .result(bookingResponse)
+                .build();
+    }
 }

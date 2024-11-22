@@ -51,6 +51,10 @@ public class SecurityConfig {
             "/tours/searchTour/**"
     };
 
+    private final String[] PUBLIC_ENDPOINTS_PUT = {
+            "/bookings/pendingcancel/**",
+    };
+
     // Dung de tao token va chong hacker
     @Value("${jwt.signerKey}")
     private String signerKey;
@@ -66,6 +70,7 @@ public class SecurityConfig {
                         authorizeRequests
                                 .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()  // Các endpoint public
                                 .requestMatchers(HttpMethod.GET, PUBLIC_ENDPOINTS_GET).permitAll()  // Các endpoint public
+                                .requestMatchers(HttpMethod.PUT, PUBLIC_ENDPOINTS_PUT).permitAll()
                                 .anyRequest().authenticated()  // Bắt buộc authentication với các endpoint còn lại
                 );
 

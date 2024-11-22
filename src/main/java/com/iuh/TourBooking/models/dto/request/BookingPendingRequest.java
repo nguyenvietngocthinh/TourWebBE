@@ -10,6 +10,6 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class BookingCancelRequest {
+public class BookingPendingRequest {
     private String activeBooking;
 }
