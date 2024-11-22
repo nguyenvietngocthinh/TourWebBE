@@ -150,13 +150,17 @@ public class TourServiceImpl implements TourService {
     }
 
     @Override
-    public List<TourResponse> searchTours(String name, String durationTour, String vehicle, int limit) {
+    public List<TourResponse> searchTours(String name, String locationStart, String durationTour, int limit) {
         // Tạo query với các điều kiện lọc
         Query query = new Query();
 
         // Nếu tên được cung cấp, tìm kiếm theo tên
         if (name != null && !name.isEmpty()) {
             query.addCriteria(Criteria.where("name").regex(name, "i")); // Tìm kiếm theo tên (không phân biệt chữ hoa/thường)
+        }
+
+        if (locationStart != null && !locationStart.isEmpty()) {
+            query.addCriteria(Criteria.where("locationStart").regex(locationStart, "i")); // Tìm kiếm theo thời gian (chuỗi)
         }
 
         // Nếu thời gian được cung cấp, tìm kiếm theo thời gian
@@ -169,9 +173,35 @@ public class TourServiceImpl implements TourService {
 //            query.addCriteria(Criteria.where("price").lte(price)); // Lọc giá nhỏ hơn hoặc bằng giá đã cung cấp
 //        }
 
-        if (vehicle != null && !vehicle.isEmpty()) {
-            query.addCriteria(Criteria.where("vehicle").regex(vehicle, "i")); // Tìm kiếm theo thời gian (chuỗi)
+
+
+        // Giới hạn số lượng kết quả trả về
+        query.limit(limit);
+
+        // Thực hiện tìm kiếm và trả về kết quả
+        List<Tour> tours = mongoTemplate.find(query, Tour.class);
+
+        // Chuyển đổi kết quả tìm kiếm thành danh sách TourResponse
+        return tours.stream()
+                .map(tourMapper::toTourResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TourResponse> searchToursAdmin(String name, String tourCode, int limit) {
+        // Tạo query với các điều kiện lọc
+        Query query = new Query();
+
+        // Nếu tên được cung cấp, tìm kiếm theo tên
+        if (name != null && !name.isEmpty()) {
+            query.addCriteria(Criteria.where("name").regex(name, "i")); // Tìm kiếm theo tên (không phân biệt chữ hoa/thường)
         }
+
+        // Nếu thời gian được cung cấp, tìm kiếm theo thời gian
+        if (tourCode != null && !tourCode.isEmpty()) {
+            query.addCriteria(Criteria.where("tourCode").regex(tourCode, "i")); // Tìm kiếm theo thời gian (chuỗi)
+        }
+
 
         // Giới hạn số lượng kết quả trả về
         query.limit(limit);

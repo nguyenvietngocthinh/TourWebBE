@@ -92,9 +92,22 @@ public class TourController {
             @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "durationTour", required = false) String durationTour,
             @RequestParam(value = "vehicle", required = false) String vehicle,
-            @RequestParam(value = "limit", defaultValue = "1") int limit) {
+            @RequestParam(value = "limit", defaultValue = "3") int limit) {
 
         List<TourResponse>  tours = tourService.searchTours(name,durationTour,vehicle, limit);
+
+        return ApiResponse.<List<TourResponse>>builder()
+                .result(tours)
+                .build();
+    }
+
+    @GetMapping("/searchTourAdmin")
+    public ApiResponse<List<TourResponse>> searchToursAdmin(
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "tourCode", required = false) String tourCode,
+            @RequestParam(value = "limit", defaultValue = "2") int limit) {
+
+        List<TourResponse>  tours = tourService.searchToursAdmin(name, tourCode, limit);
 
         return ApiResponse.<List<TourResponse>>builder()
                 .result(tours)

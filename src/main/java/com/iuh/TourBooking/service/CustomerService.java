@@ -20,4 +20,6 @@ public interface CustomerService {
 
     public List<CustomerResponse> getAllCustomer();
 
+    public List<CustomerResponse> searchCustomers(String customerName, String customerEmail, String customerPhoneNumber, int limit);
+
 }
