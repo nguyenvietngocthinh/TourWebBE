@@ -2,6 +2,7 @@ package com.iuh.TourBooking.models.dto.request;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.bson.types.ObjectId;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
@@ -17,7 +18,7 @@ import java.util.List;
 public class TourCreateRequest {
     private String tourCode; //Mã tour
     private String name;// Tên tour
-    private String description;// Mô tả
+    private List<ObjectId> description; // Mô tả
     private String image; // Hình ảnh
     private String typeTourName; // Loại
     private String typeId;// Loại tour

@@ -3,6 +3,7 @@ package com.iuh.TourBooking.models;
 import lombok.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,7 +23,7 @@ public class Tour {
 
     private String tourCode; //Mã tour
     private String name;// Tên tour
-    private String description;// Mô tả
+    private List<ObjectId> description;// Mô tả
     private String image; // Hình ảnh
     private String typeTourName; // Loại
     private String typeId;// Loại tour

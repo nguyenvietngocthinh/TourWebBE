@@ -19,6 +19,9 @@ import com.iuh.TourBooking.service.TourService;
 import com.iuh.TourBooking.service.TypeTourService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TourServiceImpl implements TourService {
@@ -39,6 +43,9 @@ public class TourServiceImpl implements TourService {
 
     @Autowired
     private S3Service s3Service;
+
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
     @Override
     public TourResponse createTour(TourCreateRequest tourCreateRequest, MultipartFile image) {
@@ -140,6 +147,42 @@ public class TourServiceImpl implements TourService {
         Tour tour = tourRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.TOUR_NOTFOUND));
         return tourMapper.toTourResponse(tour);
+    }
+
+    @Override
+    public List<TourResponse> searchTours(String name, String durationTour, String vehicle, int limit) {
+        // Tạo query với các điều kiện lọc
+        Query query = new Query();
+
+        // Nếu tên được cung cấp, tìm kiếm theo tên
+        if (name != null && !name.isEmpty()) {
+            query.addCriteria(Criteria.where("name").regex(name, "i")); // Tìm kiếm theo tên (không phân biệt chữ hoa/thường)
+        }
+
+        // Nếu thời gian được cung cấp, tìm kiếm theo thời gian
+        if (durationTour != null && !durationTour.isEmpty()) {
+            query.addCriteria(Criteria.where("durationTour").regex(durationTour, "i")); // Tìm kiếm theo thời gian (chuỗi)
+        }
+
+        // Nếu giá được cung cấp, lọc theo giá
+//        if (price != null) {
+//            query.addCriteria(Criteria.where("price").lte(price)); // Lọc giá nhỏ hơn hoặc bằng giá đã cung cấp
+//        }
+
+        if (vehicle != null && !vehicle.isEmpty()) {
+            query.addCriteria(Criteria.where("vehicle").regex(vehicle, "i")); // Tìm kiếm theo thời gian (chuỗi)
+        }
+
+        // Giới hạn số lượng kết quả trả về
+        query.limit(limit);
+
+        // Thực hiện tìm kiếm và trả về kết quả
+        List<Tour> tours = mongoTemplate.find(query, Tour.class);
+
+        // Chuyển đổi kết quả tìm kiếm thành danh sách TourResponse
+        return tours.stream()
+                .map(tourMapper::toTourResponse)
+                .collect(Collectors.toList());
     }
 
 }
