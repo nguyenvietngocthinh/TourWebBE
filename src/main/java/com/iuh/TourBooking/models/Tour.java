@@ -23,7 +23,6 @@ public class Tour {
 
     private String tourCode; //Mã tour
     private String name;// Tên tour
-    private List<ObjectId> description;// Mô tả
     private String image; // Hình ảnh
     private String typeTourName; // Loại
     private String typeId;// Loại tour
