@@ -56,6 +56,7 @@ public class BookingServiceImpl implements BookingService {
         // Chuyển đổi từ DTO sang entity Booking
         Booking booking = bookingMapper.toBooking(bookingCreateRequest);
         booking.setPayBooking(false);
+        booking.setActiveBooking("Hoạt động");
 
         // Tìm tour theo mã tourCode để lấy tên tour
         Optional<Tour> tour = tourRepository.findByTourCode(bookingCreateRequest.getTourCode());
@@ -103,6 +104,7 @@ public class BookingServiceImpl implements BookingService {
 
         // Chuyển đổi từ DTO sang entity Booking
         Booking booking = bookingMapper.toBooking(bookingCreateRequest);
+        booking.setActiveBooking("Hoạt động");
 
         // Tìm tour theo mã tourCode để lấy tên tour
         Optional<Tour> tour = tourRepository.findByTourCode(bookingCreateRequest.getTourCode());
