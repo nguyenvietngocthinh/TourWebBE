@@ -30,4 +30,6 @@ public interface TourService {
     public List<TourResponse> searchTours(String name, String durationTour, String locationStart, int limit);
 
     public List<TourResponse> searchToursAdmin(String name, String tourCode, int limit);
+
+    public long getTotalActiveTours();
 }

@@ -11,36 +11,42 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+
 @Service
 @RequiredArgsConstructor
 public class PaymentServiceImpl implements PaymentService {
 
     @Value("${stripe.api.key}")
-    private String stripeSecretKey;
+    private String stripeSecretKey; 
     @Override
     public PaymentResponse createPaymentLink(Booking booking) throws StripeException {
+        // Set the Stripe API key
         Stripe.apiKey = stripeSecretKey;
 
-        SessionCreateParams params = SessionCreateParams.builder().addPaymentMethodType(
-                SessionCreateParams.PaymentMethodType.CARD)
+        SessionCreateParams params = SessionCreateParams.builder()
+                .addPaymentMethodType(SessionCreateParams.PaymentMethodType.CARD)
                 .setMode(SessionCreateParams.Mode.PAYMENT)
-                .setSuccessUrl("http://localhost:3000/thank-you")
-                .setCancelUrl("http://localhost:3000/thank-you")
+                .setSuccessUrl("http://192.168.1.5:3000/bookings/done?session_id={CHECKOUT_SESSION_ID}")
+                .setCancelUrl("http://192.168.1.5:3000/bookings/fail")
                 .addLineItem(SessionCreateParams.LineItem.builder()
                         .setQuantity(1L)
                         .setPriceData(SessionCreateParams.LineItem.PriceData.builder()
-                                .setCurrency("VND")
+                                .setCurrency("vnd")
                                 .setUnitAmount((long) booking.getTotalMoney())
                                 .setProductData(SessionCreateParams.LineItem.PriceData.ProductData.builder()
-                                        .setName("Tour booking")
+                                        .setName("Tour Booking")
                                         .build())
                                 .build())
                         .build())
+                .putMetadata("bookingCode", booking.getBookingCode())
                 .build();
+
 
         Session session = Session.create(params);
         PaymentResponse res = new PaymentResponse();
         res.setPaymentUrl(session.getUrl());
+
         return res;
     }
 }

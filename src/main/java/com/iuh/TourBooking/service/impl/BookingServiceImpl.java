@@ -7,7 +7,6 @@ import com.iuh.TourBooking.models.Booking;
 import com.iuh.TourBooking.models.Tour;
 import com.iuh.TourBooking.models.dto.request.*;
 import com.iuh.TourBooking.models.dto.response.BookingResponse;
-import com.iuh.TourBooking.models.dto.response.TourResponse;
 import com.iuh.TourBooking.repository.BookingRepository;
 import com.iuh.TourBooking.repository.TourRepository;
 import com.iuh.TourBooking.service.BookingService;
@@ -16,13 +15,11 @@ import com.iuh.TourBooking.utils.BookingGenerateCode;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.text.NumberFormat;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
-import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.time.Year;
+import java.util.*;
 import java.util.Locale;
 
 @Service
@@ -191,6 +188,7 @@ public class BookingServiceImpl implements BookingService {
 
 
 
+
     @Override
     public void deleteBooking(String bookingCode) {
         bookingRepository.deleteByBookingCode(bookingCode);
@@ -209,4 +207,70 @@ public class BookingServiceImpl implements BookingService {
                 .orElseThrow(() -> new AppException(ErrorCode.BOOKING_NOTFOUND));
         return bookingMapper.toBookingResponse(booking);
     }
+
+    public void updateBookingPaymentStatus(String bookingCode, boolean payBooking) {
+        Booking booking = bookingRepository.findByBookingCode(bookingCode)
+                .orElseThrow(() -> new RuntimeException("Booking not found"));
+
+        // Cập nhật trạng thái thanh toán của booking
+        booking.setPayBooking(payBooking);
+
+        // Lưu lại booking với trạng thái đã cập nhật
+        bookingRepository.save(booking);
+    }
+
+    @Override
+    public void sendBookingConfirmationEmail(String bookingCode) {
+        Optional<Booking> bookingOptional = bookingRepository.findByBookingCode(bookingCode);
+        if (bookingOptional.isPresent()) {
+            Booking booking = bookingOptional.get();
+
+            // Tạo nội dung email
+            String emailBody = "Thanh toán của bạn đã thành công. Dưới đây là thông tin đặt chỗ của bạn:\n\n" +
+                    "Mã đặt chỗ: " + bookingCode + "\n" +
+                    "Tên khách hàng: " + booking.getCustomerName() + "\n" +
+                    "Số tiền: " + booking.getTotalMoney() + " VNĐ\n" +
+                    "Trạng thái thanh toán: Đã thanh toán";
+
+            // Gửi email
+            emailSenderService.send(booking.getCustomerEmail(), "Xác nhận thanh toán", emailBody);
+        }
+    }
+
+    public long getTotalCompletedBookings() {
+        return bookingRepository.countByActiveBooking("Hoạt động");  // Đếm số lượng booking với activeBooking = "Hoàn thành"
+    }
+
+    // Hàm chuyển đổi từ String sang Date với định dạng DD-MM-YYYY
+    private Date convertStringToDate(String dateStr) throws Exception {
+        // Thay đổi dấu phân cách thành "/" để khớp với định dạng ngày tháng của bạn
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        return sdf.parse(dateStr);
+    }
+
+    // Hàm tính tổng doanh thu của bookings trong năm hiện tại
+    public double getTotalRevenueForYear(int year) {
+        // Lấy danh sách tất cả các bookings
+        List<Booking> bookings = bookingRepository.findAll();
+
+        double totalRevenue = 0.0;
+
+        // Lặp qua tất cả các bookings để tính doanh thu
+        for (Booking booking : bookings) {
+            try {
+                // Chuyển đổi bookingDate thành Date
+                Date bookingDate = convertStringToDate(booking.getBookingDate());
+
+                // Kiểm tra nếu bookingDate nằm trong năm hiện tại và các điều kiện khác
+                if (bookingDate.getYear() + 1900 == year && booking.isPayBooking() && "Hoạt động".equals(booking.getActiveBooking())) {
+                    totalRevenue += booking.getTotalMoney();  // Thêm doanh thu vào tổng
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                // Nếu có lỗi khi chuyển đổi ngày, bạn có thể xử lý theo cách riêng
+            }
+        }
+        return totalRevenue;
+    }
+
 }

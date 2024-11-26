@@ -10,6 +10,7 @@ import com.iuh.TourBooking.service.TourService;
 import jakarta.validation.Valid;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -83,5 +84,17 @@ public class BookingController {
         return ApiResponse.<BookingResponse>builder()
                 .result(bookingResponse)
                 .build();
+    }
+
+    @GetMapping("/count-completed")
+    public ResponseEntity<Long> getTotalCompletedBookings() {
+        long totalCompletedBookings = bookingService.getTotalCompletedBookings();
+        return ResponseEntity.ok(totalCompletedBookings);
+    }
+
+    // API để lấy danh sách các booking trong năm hiện tại
+    @GetMapping("/revenue")
+    public double getTotalRevenue(@RequestParam int year) {
+        return bookingService.getTotalRevenueForYear(year);
     }
 }

@@ -1,5 +1,6 @@
 package com.iuh.TourBooking.service;
 
+import com.iuh.TourBooking.models.Booking;
 import com.iuh.TourBooking.models.dto.request.BookingCancelRequest;
 import com.iuh.TourBooking.models.dto.request.BookingCreateRequest;
 import com.iuh.TourBooking.models.dto.request.BookingPendingRequest;
@@ -27,4 +28,11 @@ public interface BookingService {
     public BookingResponse updateBookingToPendingCancel(String bookingCode);
 
     public BookingResponse updateBookingToCancelled(String bookingCode);
+    public void updateBookingPaymentStatus(String bookingCode, boolean payBooking);
+
+    public void sendBookingConfirmationEmail(String bookingCode);
+
+    public long getTotalCompletedBookings();
+
+    public double getTotalRevenueForYear(int year);
 }

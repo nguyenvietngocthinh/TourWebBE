@@ -12,6 +12,7 @@ import com.iuh.TourBooking.service.TypeTourService;
 import jakarta.validation.Valid;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -112,5 +113,11 @@ public class TourController {
         return ApiResponse.<List<TourResponse>>builder()
                 .result(tours)
                 .build();
+    }
+
+    @GetMapping("/count-active")
+    public ResponseEntity<Long> getTotalActiveTours() {
+        long totalActiveTours = tourService.getTotalActiveTours();
+        return ResponseEntity.ok(totalActiveTours);
     }
 }

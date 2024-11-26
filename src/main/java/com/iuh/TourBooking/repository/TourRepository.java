@@ -23,6 +23,8 @@ public interface TourRepository extends MongoRepository<Tour, ObjectId> {
 
     List<Tour> findAllByTypeId(String typeId);
 
+    long countByIsActiveTrue();
+
 
     List<Tour> findAllByTypeTourName(String typeTourName);
 }

@@ -9,10 +9,13 @@ import com.iuh.TourBooking.service.TourService;
 import jakarta.validation.Valid;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/customers")
@@ -45,4 +48,9 @@ public class CustomerController {
         return ApiResponse.<String>builder().result("Customer has been deleted").build();
     }
 
+    @GetMapping("/count")
+    public ResponseEntity<Long> getTotalCustomers() {
+        long totalCustomers = customerService.getTotalCustomers();
+        return ResponseEntity.ok(totalCustomers);
+    }
 }

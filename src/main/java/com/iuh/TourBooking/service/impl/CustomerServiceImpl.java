@@ -117,4 +117,9 @@ public class CustomerServiceImpl implements CustomerService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public long getTotalCustomers() {
+        return customerRepository.count();
+    }
+
 }

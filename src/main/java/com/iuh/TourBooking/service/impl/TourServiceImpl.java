@@ -217,4 +217,8 @@ public class TourServiceImpl implements TourService {
                 .collect(Collectors.toList());
     }
 
+    public long getTotalActiveTours() {
+        return tourRepository.countByIsActiveTrue();
+    }
+
 }

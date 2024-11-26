@@ -14,4 +14,6 @@ public interface CustomerRepository extends MongoRepository<Customer, ObjectId> 
     Optional<User> findByCustomerEmail(String customerEmail);
     boolean existsByCustomerEmail(String customerEmail);
     void deleteByCustomerEmail(String customerEmail);
+
+    long count();
 }
