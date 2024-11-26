@@ -1,5 +1,7 @@
 package com.iuh.TourBooking.service;
 
+import com.iuh.TourBooking.models.Tour;
+import com.iuh.TourBooking.models.TourDescription;
 import com.iuh.TourBooking.models.dto.request.TourCreateRequest;
 import com.iuh.TourBooking.models.dto.request.TourDescriptionCreateRequest;
 import com.iuh.TourBooking.models.dto.request.TourDescriptionUpdateRequest;
@@ -10,6 +12,7 @@ import org.bson.types.ObjectId;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TourDescriptionService {
     public TourDescriptionResponse createTourDescription(TourDescriptionCreateRequest tourDescriptionCreateRequest, MultipartFile image);
@@ -18,5 +21,7 @@ public interface TourDescriptionService {
 
     public void deleteTourDescription(ObjectId id);
     public List<TourDescriptionResponse> getAllTourDescription();
+
+    public List<TourDescriptionResponse> getTourDescriptionByTourCode(String tourCode);
 
 }

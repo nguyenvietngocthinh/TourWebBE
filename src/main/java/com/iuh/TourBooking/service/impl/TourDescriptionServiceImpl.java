@@ -44,14 +44,15 @@ public class TourDescriptionServiceImpl implements TourDescriptionService {
 
         // Upload ảnh nếu có
         String imageUrl = null;
-        if (image != null && !image.isEmpty()) {
-            imageUrl = s3Service.uploadFile(image);  // Không cần try-catch nếu uploadFile không ném IOException
+        if (image != null && !image.isEmpty()) {  // Kiểm tra nếu file image không null và không rỗng
+            imageUrl = s3Service.uploadFile(image);  // Upload ảnh và gán URL
         }
-        tourDescription.setImage(imageUrl);
+        tourDescription.setImage(imageUrl);  // Gán imageUrl (có thể là null nếu không có ảnh)
 
         // Lưu tour vào DB và trả về response
         return tourDescriptionMapper.toTourDescriptionResponse(tourDescriptionRepository.save(tourDescription));
     }
+
 
 
     @Override
@@ -63,10 +64,11 @@ public class TourDescriptionServiceImpl implements TourDescriptionService {
         tourDescriptionMapper.updateTourDescription(tourDescription, tourDescriptionUpdateRequest);
 
         // Nếu có hình ảnh mới được cung cấp, tải lên và cập nhật URL hình ảnh của tour
+        String imageUrl = null;
         if (image != null && !image.isEmpty()) {
-            String imageUrl = s3Service.uploadFile(image); // Tải lên hình ảnh mới
-            tourDescription.setImage(imageUrl); // Cập nhật URL hình ảnh mới
+            imageUrl = s3Service.uploadFile(image);  // Không cần try-catch nếu uploadFile không ném IOException
         }
+        tourDescription.setImage(imageUrl);
 
         // Lưu tour đã cập nhật vào repository và trả về phản hồi
         return tourDescriptionMapper.toTourDescriptionResponse(tourDescriptionRepository.save(tourDescription));
@@ -81,6 +83,14 @@ public class TourDescriptionServiceImpl implements TourDescriptionService {
     @Override
     public List<TourDescriptionResponse> getAllTourDescription() {
         return tourDescriptionRepository.findAll().stream()
+                .map(tourDescriptionMapper::toTourDescriptionResponse)
+                .toList();
+    }
+
+    @Override
+    public List<TourDescriptionResponse> getTourDescriptionByTourCode(String tourCode) {
+        List<TourDescription> tourDescriptions = tourDescriptionRepository.findAllByTourCode(tourCode);
+        return tourDescriptions.stream()
                 .map(tourDescriptionMapper::toTourDescriptionResponse)
                 .toList();
     }

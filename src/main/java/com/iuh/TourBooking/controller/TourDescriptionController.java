@@ -51,4 +51,10 @@ public class TourDescriptionController {
         return ApiResponse.<String>builder().result("Tour has been deleted").build();
     }
 
+    @GetMapping("/by-tourcode/{tourCode}")
+    public ApiResponse<List<TourDescriptionResponse>> getTourDescriptionsByTourCode(@PathVariable String tourCode) {
+        return ApiResponse.<List<TourDescriptionResponse>>builder()
+                .result(tourDescriptionService.getTourDescriptionByTourCode(tourCode))
+                .build();
+    }
 }

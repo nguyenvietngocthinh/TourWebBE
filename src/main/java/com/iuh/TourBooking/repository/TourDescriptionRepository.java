@@ -11,5 +11,8 @@ import java.util.Optional;
 
 @Repository
 public interface TourDescriptionRepository extends MongoRepository<TourDescription, ObjectId> {
-
+    public List<TourDescription> findAllByTourCode(String tourCode);
+    public Optional<TourDescription> findById(ObjectId id);
+    public void deleteById(ObjectId id);
+    public List<TourDescription> findAll();
 }

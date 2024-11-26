@@ -48,7 +48,9 @@ public class SecurityConfig {
             "/tours/by-tourcode/**",
             "/tours/by-id/**",
             "/bookings/by-bookingcode/**",
-            "/tours/searchTour/**"
+            "/tours/searchTour/**",
+            "/tours-description",
+            "/tours-description/by-tourcode/**",
     };
 
     private final String[] PUBLIC_ENDPOINTS_PUT = {

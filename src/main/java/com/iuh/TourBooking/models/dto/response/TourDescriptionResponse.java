@@ -21,7 +21,7 @@ public class TourDescriptionResponse {
     private String tourCode;       // Reference to the Tour's id
     private String header;       // Header for the description section
     private String content;      // Content of the description
-    private String linkImage;    // Image link related to this section
+    private String image;    // Image link related to this section
     public String getIdAsString() {
         return id != null ? id.toHexString() : null;
     }
