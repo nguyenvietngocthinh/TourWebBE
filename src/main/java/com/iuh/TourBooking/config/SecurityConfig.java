@@ -38,6 +38,7 @@ public class SecurityConfig {
             "/auth/logout",
             "/bookings",
             "/customers",
+            "/payment/payment-link",
     };
 
     private final String[] PUBLIC_ENDPOINTS_GET = {
@@ -51,6 +52,7 @@ public class SecurityConfig {
             "/tours/searchTour/**",
             "/tours-description",
             "/tours-description/by-tourcode/**",
+            "/payment/payment-link",
     };
 
     private final String[] PUBLIC_ENDPOINTS_PUT = {

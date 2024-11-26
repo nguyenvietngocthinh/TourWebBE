@@ -94,7 +94,17 @@
 			<artifactId>aws-java-sdk-s3</artifactId>
 			<version>1.12.677</version>
 		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.stripe/stripe-java -->
+		<dependency>
+			<groupId>com.stripe</groupId>
+			<artifactId>stripe-java</artifactId>
+			<version>20.62.0</version>
+		</dependency>
+
 	</dependencies>
+
+
 
 	<build>
 		<plugins>

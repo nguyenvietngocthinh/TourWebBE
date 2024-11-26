@@ -163,7 +163,7 @@ public class TourServiceImpl implements TourService {
         if (durationTour != null && !durationTour.isEmpty()) {
             query.addCriteria(Criteria.where("durationTour").regex(durationTour, "i")); // Tìm kiếm theo thời gian (chuỗi)
         }
-        
+
         if (locationStart != null && !locationStart.isEmpty()) {
             query.addCriteria(Criteria.where("locationStart").regex(locationStart, "i")); // Tìm kiếm theo thời gian (chuỗi)
         }
