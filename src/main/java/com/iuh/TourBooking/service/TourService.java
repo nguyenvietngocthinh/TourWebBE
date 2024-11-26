@@ -27,7 +27,7 @@ public interface TourService {
 
     public TourResponse getTourById(ObjectId id);
 
-    public List<TourResponse> searchTours(String name, String locationStart, String durationTour, int limit);
+    public List<TourResponse> searchTours(String name, String durationTour, String locationStart, int limit);
 
     public List<TourResponse> searchToursAdmin(String name, String tourCode, int limit);
 }

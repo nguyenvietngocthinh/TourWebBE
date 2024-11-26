@@ -150,7 +150,7 @@ public class TourServiceImpl implements TourService {
     }
 
     @Override
-    public List<TourResponse> searchTours(String name, String locationStart, String durationTour, int limit) {
+    public List<TourResponse> searchTours(String name,String durationTour, String locationStart,  int limit) {
         // Tạo query với các điều kiện lọc
         Query query = new Query();
 
@@ -159,14 +159,16 @@ public class TourServiceImpl implements TourService {
             query.addCriteria(Criteria.where("name").regex(name, "i")); // Tìm kiếm theo tên (không phân biệt chữ hoa/thường)
         }
 
-        if (locationStart != null && !locationStart.isEmpty()) {
-            query.addCriteria(Criteria.where("locationStart").regex(locationStart, "i")); // Tìm kiếm theo thời gian (chuỗi)
-        }
-
         // Nếu thời gian được cung cấp, tìm kiếm theo thời gian
         if (durationTour != null && !durationTour.isEmpty()) {
             query.addCriteria(Criteria.where("durationTour").regex(durationTour, "i")); // Tìm kiếm theo thời gian (chuỗi)
         }
+        
+        if (locationStart != null && !locationStart.isEmpty()) {
+            query.addCriteria(Criteria.where("locationStart").regex(locationStart, "i")); // Tìm kiếm theo thời gian (chuỗi)
+        }
+
+
 
         // Nếu giá được cung cấp, lọc theo giá
 //        if (price != null) {

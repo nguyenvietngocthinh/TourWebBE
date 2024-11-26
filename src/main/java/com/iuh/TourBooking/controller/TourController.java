@@ -91,10 +91,10 @@ public class TourController {
     public ApiResponse<List<TourResponse>> searchTours(
             @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "durationTour", required = false) String durationTour,
-            @RequestParam(value = "vehicle", required = false) String vehicle,
-            @RequestParam(value = "limit", defaultValue = "3") int limit) {
+            @RequestParam(value = "locationStart", required = false) String locationStart,
+            @RequestParam(value = "limit", defaultValue = "100") int limit) {
 
-        List<TourResponse>  tours = tourService.searchTours(name,durationTour,vehicle, limit);
+        List<TourResponse>  tours = tourService.searchTours(name,durationTour,locationStart, limit);
 
         return ApiResponse.<List<TourResponse>>builder()
                 .result(tours)
