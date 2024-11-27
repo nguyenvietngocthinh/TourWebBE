@@ -34,6 +34,6 @@ public class Booking {
     private String tourCode;
     private String typePay;
     private double totalMoney;
-        private boolean payBooking;
+    private boolean payBooking;
     private String activeBooking;
 }

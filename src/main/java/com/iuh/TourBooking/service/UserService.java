@@ -5,7 +5,6 @@ import com.iuh.TourBooking.models.dto.request.UserCreateRequest;
 import com.iuh.TourBooking.models.dto.request.UserUpdateRequest;
 import com.iuh.TourBooking.models.dto.response.UserResponse;
 import org.bson.types.ObjectId;
-import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 
@@ -23,4 +22,5 @@ public interface UserService {
     public UserResponse getMyinfo();
 
     public List<UserResponse> searchUsers(String username, String email, String phoneNumber, int limit);
+
 }

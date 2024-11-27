@@ -1,9 +1,8 @@
 package com.iuh.TourBooking.controller;
 
+import com.iuh.TourBooking.models.Booking;
 import com.iuh.TourBooking.models.dto.request.*;
-import com.iuh.TourBooking.models.dto.response.ApiResponse;
-import com.iuh.TourBooking.models.dto.response.BookingResponse;
-import com.iuh.TourBooking.models.dto.response.TourResponse;
+import com.iuh.TourBooking.models.dto.response.*;
 
 import com.iuh.TourBooking.service.BookingService;
 import com.iuh.TourBooking.service.TourService;
@@ -14,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -97,4 +97,24 @@ public class BookingController {
     public double getTotalRevenue(@RequestParam int year) {
         return bookingService.getTotalRevenueForYear(year);
     }
+
+    @GetMapping("/top-tours")
+    public List<TopTourResponse> getTop5Tours() {
+        return bookingService.getTop5Tours();
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<List<Booking>> getActivePaidBookingsBetweenDates(
+            @RequestParam("startDate") String startDate,
+            @RequestParam("endDate") String endDate) throws Exception {
+        List<Booking> bookings = bookingService.getActivePaidBookingsBetweenDates(startDate, endDate);
+        return ResponseEntity.ok(bookings);
+    }
+    @GetMapping("/customer-statistics")
+    public ResponseEntity<List<CustomerStatistics>> getCustomerStatistics() {
+        List<CustomerStatistics> customerStatistics = bookingService.getCustomerStatistics();
+        return ResponseEntity.ok(customerStatistics);
+    }
+
+
 }

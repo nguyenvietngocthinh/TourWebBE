@@ -29,7 +29,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -196,5 +195,21 @@ public class UserServiceImpl implements UserService {
                 .map(userMapper::toUserResponse)
                 .collect(Collectors.toList());
     }
+
+    public boolean checkOldPassword(ObjectId id, String oldPassword) {
+        // Lấy người dùng từ cơ sở dữ liệu
+        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+        return passwordEncoder.matches(oldPassword, user.getPassword()); // So sánh mật khẩu cũ
+    }
+
+    public void updatePassword(ObjectId id, String newPassword) {
+
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        user.setPassword(passwordEncoder.encode(newPassword)); // Mã hóa mật khẩu mới
+        userRepository.save(user);
+    }
+
 
 }

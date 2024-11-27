@@ -6,6 +6,8 @@ import com.iuh.TourBooking.models.dto.request.BookingCreateRequest;
 import com.iuh.TourBooking.models.dto.request.BookingPendingRequest;
 import com.iuh.TourBooking.models.dto.request.BookingUpdateRequest;
 import com.iuh.TourBooking.models.dto.response.BookingResponse;
+import com.iuh.TourBooking.models.dto.response.CustomerStatistics;
+import com.iuh.TourBooking.models.dto.response.TopTourResponse;
 import com.iuh.TourBooking.models.dto.response.TourResponse;
 import org.bson.types.ObjectId;
 
@@ -35,4 +37,10 @@ public interface BookingService {
     public long getTotalCompletedBookings();
 
     public double getTotalRevenueForYear(int year);
+
+    public List<TopTourResponse> getTop5Tours();
+
+    public List<Booking> getActivePaidBookingsBetweenDates(String startDate, String endDate) throws Exception;
+
+    public List<CustomerStatistics> getCustomerStatistics();
 }

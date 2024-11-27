@@ -1,6 +1,5 @@
 package com.iuh.TourBooking.controller;
 
-import com.iuh.TourBooking.models.User;
 import com.iuh.TourBooking.models.dto.request.UserCreateRequest;
 import com.iuh.TourBooking.models.dto.request.UserUpdateRequest;
 import com.iuh.TourBooking.models.dto.response.ApiResponse;
@@ -10,12 +9,11 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/users")
@@ -23,8 +21,6 @@ import java.util.stream.Collectors;
 public class UserController{
     @Autowired
     private UserService userService;
-
-
 
     @PostMapping
     private ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreateRequest userCreateRequest) {
@@ -112,4 +108,6 @@ public class UserController{
                 .result(users)
                 .build();
     }
+
+
 }

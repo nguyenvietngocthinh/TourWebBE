@@ -7,6 +7,8 @@ import com.iuh.TourBooking.models.Booking;
 import com.iuh.TourBooking.models.Tour;
 import com.iuh.TourBooking.models.dto.request.*;
 import com.iuh.TourBooking.models.dto.response.BookingResponse;
+import com.iuh.TourBooking.models.dto.response.CustomerStatistics;
+import com.iuh.TourBooking.models.dto.response.TopTourResponse;
 import com.iuh.TourBooking.repository.BookingRepository;
 import com.iuh.TourBooking.repository.TourRepository;
 import com.iuh.TourBooking.service.BookingService;
@@ -272,5 +274,56 @@ public class BookingServiceImpl implements BookingService {
         }
         return totalRevenue;
     }
+
+    @Override
+    public List<TopTourResponse> getTop5Tours() {
+        return bookingRepository.getTop5Tours();
+    }
+
+    public List<Booking> getActivePaidBookingsBetweenDates(String startDate, String endDate) throws Exception {
+
+        List<Booking> bookings = bookingRepository.findByBookingDateBetweenAndPayBookingIsTrueAndActiveBooking(
+                startDate, endDate, "Hoạt động");
+
+        System.out.println("Bookings found: " + bookings.size());
+        return bookings;
+    }
+
+
+    public List<CustomerStatistics> getCustomerStatistics() {
+        // Lọc các booking có payBooking = true và activeBooking = "Hoạt động"
+        List<Booking> bookings = bookingRepository.findByPayBookingTrueAndActiveBooking("Hoạt động");
+
+        // Sử dụng một map để tính tổng tiền chi cho mỗi khách hàng
+        Map<String, Double> customerSpendMap = new HashMap<>();
+        Map<String, String> customerNameMap = new HashMap<>();  // Thêm map để lưu tên khách hàng
+
+        // Lặp qua các booking và tính tổng tiền chi cho mỗi email khách hàng
+        for (Booking booking : bookings) {
+            String customerEmail = booking.getCustomerEmail();
+            double totalMoney = booking.getTotalMoney();
+            String customerName = booking.getCustomerName();  // Lấy tên khách hàng
+
+            // Lưu tên khách hàng vào map
+            if (!customerNameMap.containsKey(customerEmail)) {
+                customerNameMap.put(customerEmail, customerName);
+            }
+
+            customerSpendMap.put(customerEmail, customerSpendMap.getOrDefault(customerEmail, 0.0) + totalMoney);
+        }
+
+        // Chuyển đổi dữ liệu từ map sang list của CustomerStatistics
+        List<CustomerStatistics> statistics = new ArrayList<>();
+        for (Map.Entry<String, Double> entry : customerSpendMap.entrySet()) {
+            String customerEmail = entry.getKey();
+            double totalSpent = entry.getValue();
+            String customerName = customerNameMap.get(customerEmail);  // Lấy tên khách hàng từ map
+
+            statistics.add(new CustomerStatistics(customerEmail, customerName, totalSpent));
+        }
+
+        return statistics;
+    }
+
 
 }
