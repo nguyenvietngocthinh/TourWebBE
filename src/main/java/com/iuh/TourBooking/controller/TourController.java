@@ -102,6 +102,49 @@ public class TourController {
                 .build();
     }
 
+    @GetMapping("/searchTourTypeId1")
+    public ApiResponse<List<TourResponse>> searchToursTypeId1(
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "durationTour", required = false) String durationTour,
+            @RequestParam(value = "locationStart", required = false) String locationStart,
+            @RequestParam(value = "limit", defaultValue = "100") int limit) {
+
+        List<TourResponse>  tours = tourService.searchToursTypeId1(name,durationTour,locationStart, limit);
+
+        return ApiResponse.<List<TourResponse>>builder()
+                .result(tours)
+                .build();
+    }
+
+    @GetMapping("/searchTourTypeId2")
+    public ApiResponse<List<TourResponse>> searchToursTypeId2(
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "durationTour", required = false) String durationTour,
+            @RequestParam(value = "locationStart", required = false) String locationStart,
+            @RequestParam(value = "limit", defaultValue = "100") int limit) {
+
+        List<TourResponse>  tours = tourService.searchToursTypeId2(name,durationTour,locationStart, limit);
+
+        return ApiResponse.<List<TourResponse>>builder()
+                .result(tours)
+                .build();
+    }
+
+    @GetMapping("/searchTourTypeTour")
+    public ApiResponse<List<TourResponse>> searchToursTypeTour(
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "durationTour", required = false) String durationTour,
+            @RequestParam(value = "locationStart", required = false) String locationStart,
+            @RequestParam(value = "typeTour", required = false) String typeTour,
+            @RequestParam(value = "limit", defaultValue = "100") int limit) {
+
+        List<TourResponse>  tours = tourService.searchToursTypeTour(name,durationTour,locationStart,typeTour ,limit);
+
+        return ApiResponse.<List<TourResponse>>builder()
+                .result(tours)
+                .build();
+    }
+
     @GetMapping("/searchTourAdmin")
     public ApiResponse<List<TourResponse>> searchToursAdmin(
             @RequestParam(value = "name", required = false) String name,

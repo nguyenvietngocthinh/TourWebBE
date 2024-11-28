@@ -32,4 +32,10 @@ public interface TourService {
     public List<TourResponse> searchToursAdmin(String name, String tourCode, int limit);
 
     public long getTotalActiveTours();
+
+    public List<TourResponse> searchToursTypeId2(String name,String durationTour, String locationStart,  int limit);
+
+    public List<TourResponse> searchToursTypeId1(String name,String durationTour, String locationStart,  int limit);
+
+    public List<TourResponse> searchToursTypeTour(String name, String durationTour, String locationStart, String typeTour, int limit);
 }

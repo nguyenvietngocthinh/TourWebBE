@@ -174,9 +174,80 @@ public class TourServiceImpl implements TourService {
 //        if (price != null) {
 //            query.addCriteria(Criteria.where("price").lte(price)); // Lọc giá nhỏ hơn hoặc bằng giá đã cung cấp
 //        }
+        // Giới hạn số lượng kết quả trả về
+        query.limit(limit);
 
+        // Thực hiện tìm kiếm và trả về kết quả
+        List<Tour> tours = mongoTemplate.find(query, Tour.class);
 
+        // Chuyển đổi kết quả tìm kiếm thành danh sách TourResponse
+        return tours.stream()
+                .map(tourMapper::toTourResponse)
+                .collect(Collectors.toList());
+    }
 
+    @Override
+    public List<TourResponse> searchToursTypeId1(String name,String durationTour, String locationStart,  int limit) {
+        // Tạo query với các điều kiện lọc
+        Query query = new Query();
+
+        // Nếu tên được cung cấp, tìm kiếm theo tên
+        if (name != null && !name.isEmpty()) {
+            query.addCriteria(Criteria.where("name").regex(name, "i")); // Tìm kiếm theo tên (không phân biệt chữ hoa/thường)
+        }
+
+        query.addCriteria(Criteria.where("typeId").is("1"));
+
+        // Nếu thời gian được cung cấp, tìm kiếm theo thời gian
+        if (durationTour != null && !durationTour.isEmpty()) {
+            query.addCriteria(Criteria.where("durationTour").regex(durationTour, "i")); // Tìm kiếm theo thời gian (chuỗi)
+        }
+
+        if (locationStart != null && !locationStart.isEmpty()) {
+            query.addCriteria(Criteria.where("locationStart").regex(locationStart, "i")); // Tìm kiếm theo thời gian (chuỗi)
+        }
+
+        // Nếu giá được cung cấp, lọc theo giá
+//        if (price != null) {
+//            query.addCriteria(Criteria.where("price").lte(price)); // Lọc giá nhỏ hơn hoặc bằng giá đã cung cấp
+//        }
+        // Giới hạn số lượng kết quả trả về
+        query.limit(limit);
+
+        // Thực hiện tìm kiếm và trả về kết quả
+        List<Tour> tours = mongoTemplate.find(query, Tour.class);
+
+        // Chuyển đổi kết quả tìm kiếm thành danh sách TourResponse
+        return tours.stream()
+                .map(tourMapper::toTourResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TourResponse> searchToursTypeId2(String name,String durationTour, String locationStart,  int limit) {
+        // Tạo query với các điều kiện lọc
+        Query query = new Query();
+
+        // Nếu tên được cung cấp, tìm kiếm theo tên
+        if (name != null && !name.isEmpty()) {
+            query.addCriteria(Criteria.where("name").regex(name, "i")); // Tìm kiếm theo tên (không phân biệt chữ hoa/thường)
+        }
+
+        query.addCriteria(Criteria.where("typeId").is("2"));
+
+        // Nếu thời gian được cung cấp, tìm kiếm theo thời gian
+        if (durationTour != null && !durationTour.isEmpty()) {
+            query.addCriteria(Criteria.where("durationTour").regex(durationTour, "i")); // Tìm kiếm theo thời gian (chuỗi)
+        }
+
+        if (locationStart != null && !locationStart.isEmpty()) {
+            query.addCriteria(Criteria.where("locationStart").regex(locationStart, "i")); // Tìm kiếm theo thời gian (chuỗi)
+        }
+
+        // Nếu giá được cung cấp, lọc theo giá
+//        if (price != null) {
+//            query.addCriteria(Criteria.where("price").lte(price)); // Lọc giá nhỏ hơn hoặc bằng giá đã cung cấp
+//        }
         // Giới hạn số lượng kết quả trả về
         query.limit(limit);
 
@@ -216,6 +287,49 @@ public class TourServiceImpl implements TourService {
                 .map(tourMapper::toTourResponse)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<TourResponse> searchToursTypeTour(String name,String durationTour, String locationStart, String typeTour,  int limit) {
+        // Tạo query với các điều kiện lọc
+        Query query = new Query();
+
+        // Nếu tên được cung cấp, tìm kiếm theo tên
+        if (name != null && !name.isEmpty()) {
+            query.addCriteria(Criteria.where("name").regex(name, "i")); // Tìm kiếm theo tên (không phân biệt chữ hoa/thường)
+        }
+
+        // Nếu thời gian được cung cấp, tìm kiếm theo thời gian
+        if (durationTour != null && !durationTour.isEmpty()) {
+            query.addCriteria(Criteria.where("durationTour").regex(durationTour, "i")); // Tìm kiếm theo thời gian (chuỗi)
+        }
+
+        if (locationStart != null && !locationStart.isEmpty()) {
+            query.addCriteria(Criteria.where("locationStart").regex(locationStart, "i")); // Tìm kiếm theo thời gian (chuỗi)
+        }
+
+
+        if (typeTour != null && !typeTour.isEmpty()) {
+            query.addCriteria(Criteria.where("typeTour").regex(typeTour, "i")); // Tìm kiếm theo thời gian (chuỗi)
+        }
+
+
+
+        // Nếu giá được cung cấp, lọc theo giá
+//        if (price != null) {
+//            query.addCriteria(Criteria.where("price").lte(price)); // Lọc giá nhỏ hơn hoặc bằng giá đã cung cấp
+//        }
+        // Giới hạn số lượng kết quả trả về
+        query.limit(limit);
+
+        // Thực hiện tìm kiếm và trả về kết quả
+        List<Tour> tours = mongoTemplate.find(query, Tour.class);
+
+        // Chuyển đổi kết quả tìm kiếm thành danh sách TourResponse
+        return tours.stream()
+                .map(tourMapper::toTourResponse)
+                .collect(Collectors.toList());
+    }
+
 
     public long getTotalActiveTours() {
         return tourRepository.countByIsActiveTrue();
