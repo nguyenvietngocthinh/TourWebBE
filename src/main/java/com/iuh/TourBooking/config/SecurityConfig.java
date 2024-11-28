@@ -54,7 +54,8 @@ public class SecurityConfig {
             "/tours-description",
             "/tours-description/by-tourcode/**",
             "/payment/payment-link",
-            "pay/done"
+            "/pay/done",
+            "/coupons/by-codecoupon/**"
     };
 
     private final String[] PUBLIC_ENDPOINTS_PUT = {

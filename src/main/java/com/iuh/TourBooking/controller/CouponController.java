@@ -5,6 +5,7 @@ import com.iuh.TourBooking.models.dto.request.CouponUpdateRequest;
 import com.iuh.TourBooking.models.dto.request.TypeCreateRequest;
 import com.iuh.TourBooking.models.dto.request.TypeUpdateRequest;
 import com.iuh.TourBooking.models.dto.response.ApiResponse;
+import com.iuh.TourBooking.models.dto.response.BookingResponse;
 import com.iuh.TourBooking.models.dto.response.CouponResponse;
 import com.iuh.TourBooking.models.dto.response.TypeResponse;
 import com.iuh.TourBooking.service.CouponService;
@@ -45,5 +46,10 @@ public class CouponController {
         return ApiResponse.<String>builder().result("Coupon has been deleted").build();
     }
 
-
+    @GetMapping("/by-codecoupon/{codeCoupon}")
+    public ApiResponse<CouponResponse> getCouponByCodeCoupon(@PathVariable String codeCoupon) {
+        return ApiResponse.<CouponResponse>builder()
+                .result(couponService.getCouponByCodeCoupon(codeCoupon))
+                .build();
+    }
 }

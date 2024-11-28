@@ -14,4 +14,5 @@ public interface CouponService {
     public CouponResponse updateCoupon(String codeCoupon, CouponUpdateRequest couponUpdateRequest);
     public void deleteCoupon(String codeCoupon);
     public List<CouponResponse> getAllCoupon();
+    public CouponResponse getCouponByCodeCoupon(String codeCoupon);
 }
