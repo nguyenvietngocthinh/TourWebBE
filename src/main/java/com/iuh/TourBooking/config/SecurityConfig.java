@@ -60,6 +60,7 @@ public class SecurityConfig {
             "/pay/done",
             "/coupons/by-codecoupon/**",
             "/coupons",
+            "/coupons/couponCancel/**",
     };
 
     private final String[] PUBLIC_ENDPOINTS_PUT = {

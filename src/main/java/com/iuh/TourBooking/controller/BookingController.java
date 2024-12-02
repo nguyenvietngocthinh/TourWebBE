@@ -116,5 +116,28 @@ public class BookingController {
         return ResponseEntity.ok(customerStatistics);
     }
 
+    @GetMapping("/search")
+    public ApiResponse<List<BookingResponse>> searchBookings(
+            @RequestParam(value = "bookingCode", required = false) String bookingCode,
+            @RequestParam(value = "limit", defaultValue = "100") int limit) {
+
+        List<BookingResponse>  bookings = bookingService.searchBookings(bookingCode, limit);
+
+        return ApiResponse.<List<BookingResponse>>builder()
+                .result(bookings)
+                .build();
+    }
+
+    @GetMapping("/searchCancel")
+    public ApiResponse<List<BookingResponse>> searchBookingsCancel(
+            @RequestParam(value = "bookingCode", required = false) String bookingCode,
+            @RequestParam(value = "limit", defaultValue = "100") int limit) {
+
+        List<BookingResponse>  bookings = bookingService.searchBookingsCancel(bookingCode, limit);
+
+        return ApiResponse.<List<BookingResponse>>builder()
+                .result(bookings)
+                .build();
+    }
 
 }

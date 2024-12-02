@@ -94,21 +94,61 @@ public class CouponServiceImpl implements CouponService {
         return couponMapper.toCouponResponse(coupon);
     }
 
+//    @Override
+//    public List<CouponResponse> searchCoupons(String codeCoupon, int limit) {
+//        // Tạo query với các điều kiện lọc
+//        Query query = new Query();
+//
+//        // Nếu tên người dùng được cung cấp, tìm kiếm theo tên
+//        if (codeCoupon != null && !codeCoupon.isEmpty()) {
+//            query.addCriteria(Criteria.where("codeCoupon").regex(codeCoupon, "i"));  // Tìm kiếm theo tên (không phân biệt chữ hoa/thường)
+//        }
+//        // Thực hiện tìm kiếm và trả về kết quả
+//        List<Coupon> coupons = mongoTemplate.find(query, Coupon.class);
+//
+//        // Chuyển đổi kết quả tìm kiếm thành danh sách UserResponse
+//        return coupons.stream()
+//                .map(couponMapper::toCouponResponse)
+//                .collect(Collectors.toList());
+//    }
+
     @Override
-    public List<CouponResponse> searchCoupons(String codeCoupon, int limit) {
+    public List<CouponResponse> searchCoupons(String codeCoupon, int discount, int limit) {
         // Tạo query với các điều kiện lọc
         Query query = new Query();
 
-        // Nếu tên người dùng được cung cấp, tìm kiếm theo tên
+        // Nếu mã giảm giá (codeCoupon) được cung cấp, tìm kiếm theo mã giảm giá
         if (codeCoupon != null && !codeCoupon.isEmpty()) {
-            query.addCriteria(Criteria.where("codeCoupon").regex(codeCoupon, "i"));  // Tìm kiếm theo tên (không phân biệt chữ hoa/thường)
+            query.addCriteria(Criteria.where("codeCoupon").regex(codeCoupon, "i"));  // Tìm kiếm theo codeCoupon (không phân biệt chữ hoa/thường)
         }
+
+        // Nếu discount được cung cấp, tìm kiếm theo discount
+        if (discount > 0) {
+            query.addCriteria(Criteria.where("discount").is(discount));  // Tìm kiếm theo giá trị discount
+        }
+
+        // Giới hạn số lượng kết quả trả về
+        query.limit(limit);
+
         // Thực hiện tìm kiếm và trả về kết quả
         List<Coupon> coupons = mongoTemplate.find(query, Coupon.class);
 
-        // Chuyển đổi kết quả tìm kiếm thành danh sách UserResponse
+        // Chuyển đổi kết quả tìm kiếm thành danh sách CouponResponse
         return coupons.stream()
                 .map(couponMapper::toCouponResponse)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public CouponResponse updateCouponToCancel(String codeCoupon) {
+        Coupon coupon = couponRepository.findByCodeCoupon(codeCoupon)
+                .orElseThrow(() -> new RuntimeException("Coupon not found"));
+
+        // Cập nhật trạng thái activeBooking thành "Chờ hủy"
+        coupon.setActiveCoupon(false);
+
+        // Lưu lại booking với trạng thái đã cập nhật
+        return couponMapper.toCouponResponse(couponRepository.save(coupon));
+    }
+
 }

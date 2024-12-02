@@ -150,9 +150,22 @@ public class TourController {
     public ApiResponse<List<TourResponse>> searchToursAdmin(
             @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "tourCode", required = false) String tourCode,
-            @RequestParam(value = "limit", defaultValue = "2") int limit) {
+            @RequestParam(value = "limit", defaultValue = "100") int limit) {
 
         List<TourResponse>  tours = tourService.searchToursAdmin(name, tourCode, limit);
+
+        return ApiResponse.<List<TourResponse>>builder()
+                .result(tours)
+                .build();
+    }
+
+    @GetMapping("/searchTourAdminFalse")
+    public ApiResponse<List<TourResponse>> searchToursAdminFalse(
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "tourCode", required = false) String tourCode,
+            @RequestParam(value = "limit", defaultValue = "100") int limit) {
+
+        List<TourResponse>  tours = tourService.searchToursAdminFalse(name, tourCode, limit);
 
         return ApiResponse.<List<TourResponse>>builder()
                 .result(tours)

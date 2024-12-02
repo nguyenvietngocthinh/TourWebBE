@@ -53,12 +53,22 @@ public class CouponController {
     @GetMapping("/searchCoupon")
     public ApiResponse<List<CouponResponse>> searchCoupons(
             @RequestParam(value = "codeCoupon", required = false) String codeCoupon,
+            @RequestParam(value = "discount", required = false) int discount,
             @RequestParam(value = "limit", defaultValue = "10") int limit) {
 
-        List<CouponResponse>  coupons = couponService.searchCoupons(codeCoupon, limit);
+        List<CouponResponse>  coupons = couponService.searchCoupons(codeCoupon,discount ,limit);
 
         return ApiResponse.<List<CouponResponse>>builder()
                 .result(coupons)
+                .build();
+    }
+
+    @PutMapping("/couponCancel/{codeCoupon}")
+    public ApiResponse<CouponResponse> updateCouponToCancel(
+            @PathVariable String codeCoupon) {
+        CouponResponse coupon = couponService.updateCouponToCancel(codeCoupon);
+        return ApiResponse.<CouponResponse>builder()
+                .result(coupon)
                 .build();
     }
 }

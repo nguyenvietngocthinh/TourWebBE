@@ -38,4 +38,6 @@ public interface TourService {
     public List<TourResponse> searchToursTypeId1(String name,String durationTour, String locationStart,  int limit);
 
     public List<TourResponse> searchToursTypeTour(String name, String durationTour, String locationStart, String typeTour, int limit);
+
+    public List<TourResponse> searchToursAdminFalse(String name, String tourCode, int limit);
 }

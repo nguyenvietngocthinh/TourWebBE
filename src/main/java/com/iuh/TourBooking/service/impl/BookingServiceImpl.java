@@ -5,10 +5,12 @@ import com.iuh.TourBooking.exception.AppException;
 import com.iuh.TourBooking.mappers.BookingMapper;
 import com.iuh.TourBooking.models.Booking;
 import com.iuh.TourBooking.models.Tour;
+import com.iuh.TourBooking.models.TypeTour;
 import com.iuh.TourBooking.models.dto.request.*;
 import com.iuh.TourBooking.models.dto.response.BookingResponse;
 import com.iuh.TourBooking.models.dto.response.CustomerStatistics;
 import com.iuh.TourBooking.models.dto.response.TopTourResponse;
+import com.iuh.TourBooking.models.dto.response.TypeTourResponse;
 import com.iuh.TourBooking.repository.BookingRepository;
 import com.iuh.TourBooking.repository.TourRepository;
 import com.iuh.TourBooking.service.BookingService;
@@ -16,6 +18,9 @@ import com.iuh.TourBooking.service.EmailSenderService;
 import com.iuh.TourBooking.utils.BookingGenerateCode;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.text.NumberFormat;
@@ -23,6 +28,7 @@ import java.text.SimpleDateFormat;
 import java.time.Year;
 import java.util.*;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 @Service
 public class BookingServiceImpl implements BookingService {
@@ -37,6 +43,9 @@ public class BookingServiceImpl implements BookingService {
 
     @Autowired
     private EmailSenderService emailSenderService;
+
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
     @Override
     public BookingResponse createBooking(BookingCreateRequest bookingCreateRequest) {
@@ -160,7 +169,7 @@ public class BookingServiceImpl implements BookingService {
                 .orElseThrow(() -> new RuntimeException("Booking not found"));
 
         // Cập nhật trạng thái activeBooking thành "Chờ hủy"
-        booking.setActiveBooking("Chờ hủy");
+        booking.setActiveBooking("Đang chờ hủy");
 
         // Lưu lại booking với trạng thái đã cập nhật
         return bookingMapper.toBookingResponse(bookingRepository.save(booking));
@@ -325,5 +334,44 @@ public class BookingServiceImpl implements BookingService {
         return statistics;
     }
 
+    @Override
+    public List<BookingResponse> searchBookings(String bookingCode, int limit) {
+        // Tạo query với các điều kiện lọc
+        Query query = new Query();
+
+        // Nếu tên người dùng được cung cấp, tìm kiếm theo tên
+        if (bookingCode != null && !bookingCode.isEmpty()) {
+            query.addCriteria(Criteria.where("bookingCode").regex(bookingCode, "i"));  // Tìm kiếm theo tên (không phân biệt chữ hoa/thường)
+        }
+        // Thực hiện tìm kiếm và trả về kết quả
+        List<Booking> bookings = mongoTemplate.find(query, Booking.class);
+
+        // Chuyển đổi kết quả tìm kiếm thành danh sách UserResponse
+        return bookings.stream()
+                .map(bookingMapper::toBookingResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<BookingResponse> searchBookingsCancel(String bookingCode, int limit) {
+        // Tạo query với các điều kiện lọc
+        Query query = new Query();
+
+        // Thêm điều kiện cố định cho activeBooking là "Đang chờ hủy"
+        query.addCriteria(Criteria.where("activeBooking").is("Đang chờ hủy"));
+
+        // Nếu bookingCode được cung cấp, thêm điều kiện tìm kiếm theo bookingCode
+        if (bookingCode != null && !bookingCode.isEmpty()) {
+            query.addCriteria(Criteria.where("bookingCode").regex(bookingCode, "i"));  // Tìm kiếm không phân biệt chữ hoa/thường
+        }
+
+        // Thực hiện tìm kiếm và trả về kết quả
+        List<Booking> bookings = mongoTemplate.find(query, Booking.class);
+
+        // Chuyển đổi kết quả tìm kiếm thành danh sách BookingResponse
+        return bookings.stream()
+                .map(bookingMapper::toBookingResponse)
+                .collect(Collectors.toList());
+    }
 
 }

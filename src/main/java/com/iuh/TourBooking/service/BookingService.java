@@ -43,4 +43,7 @@ public interface BookingService {
     public List<Booking> getActivePaidBookingsBetweenDates(String startDate, String endDate) throws Exception;
 
     public List<CustomerStatistics> getCustomerStatistics();
+    public List<BookingResponse> searchBookings(String bookingCode, int limit);
+
+    public List<BookingResponse> searchBookingsCancel(String bookingCode, int limit);
 }

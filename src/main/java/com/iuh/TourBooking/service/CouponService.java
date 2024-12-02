@@ -16,5 +16,7 @@ public interface CouponService {
     public List<CouponResponse> getAllCoupon();
     public CouponResponse getCouponByCodeCoupon(String codeCoupon);
 
-    public List<CouponResponse> searchCoupons(String codeCoupon, int limit);
+    public List<CouponResponse> searchCoupons(String codeCoupon, int discount, int limit);
+
+    public CouponResponse updateCouponToCancel(String codeCoupon);
 }

@@ -330,6 +330,37 @@ public class TourServiceImpl implements TourService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<TourResponse> searchToursAdminFalse(String name, String tourCode, int limit) {
+        // Tạo query với các điều kiện lọc
+        Query query = new Query();
+
+        // Điều kiện áp cứng: chỉ tìm kiếm các tour có isActive là false
+        query.addCriteria(Criteria.where("isActive").is(false));
+
+        // Nếu tên được cung cấp, tìm kiếm theo tên
+        if (name != null && !name.isEmpty()) {
+            query.addCriteria(Criteria.where("name").regex(name, "i")); // Tìm kiếm theo tên (không phân biệt chữ hoa/thường)
+        }
+
+        // Nếu tourCode được cung cấp, tìm kiếm theo tourCode
+        if (tourCode != null && !tourCode.isEmpty()) {
+            query.addCriteria(Criteria.where("tourCode").regex(tourCode, "i")); // Tìm kiếm theo tourCode
+        }
+
+        // Giới hạn số lượng kết quả trả về
+        query.limit(limit);
+
+        // Thực hiện tìm kiếm và trả về kết quả
+        List<Tour> tours = mongoTemplate.find(query, Tour.class);
+
+        // Chuyển đổi kết quả tìm kiếm thành danh sách TourResponse
+        return tours.stream()
+                .map(tourMapper::toTourResponse)
+                .collect(Collectors.toList());
+    }
+
+
 
     public long getTotalActiveTours() {
         return tourRepository.countByIsActiveTrue();
