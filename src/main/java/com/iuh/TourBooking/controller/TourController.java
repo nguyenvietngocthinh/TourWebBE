@@ -102,6 +102,7 @@ public class TourController {
                 .build();
     }
 
+
     @GetMapping("/searchTourTypeId1")
     public ApiResponse<List<TourResponse>> searchToursTypeId1(
             @RequestParam(value = "name", required = false) String name,

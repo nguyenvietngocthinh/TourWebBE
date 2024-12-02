@@ -6,6 +6,7 @@ import com.iuh.TourBooking.exception.AppException;
 import com.iuh.TourBooking.mappers.UserMapper;
 import com.iuh.TourBooking.models.User;
 import com.iuh.TourBooking.models.dto.request.UserCreateRequest;
+import com.iuh.TourBooking.models.dto.request.UserUpdatePasswordRequest;
 import com.iuh.TourBooking.models.dto.request.UserUpdateRequest;
 import com.iuh.TourBooking.models.dto.response.UserResponse;
 import com.iuh.TourBooking.repository.UserRepository;
@@ -196,19 +197,16 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
-    public boolean checkOldPassword(ObjectId id, String oldPassword) {
-        // Lấy người dùng từ cơ sở dữ liệu
-        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
-        return passwordEncoder.matches(oldPassword, user.getPassword()); // So sánh mật khẩu cũ
-    }
+    @Override
+    public UserResponse updateUserPassword(ObjectId id, UserUpdatePasswordRequest userUpdatePasswordRequest) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-    public void updatePassword(ObjectId id, String newPassword) {
-
+        userMapper.updateUserPassword(user, userUpdatePasswordRequest);
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
-        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
-        user.setPassword(passwordEncoder.encode(newPassword)); // Mã hóa mật khẩu mới
-        userRepository.save(user);
+        user.setPassword(passwordEncoder.encode(userUpdatePasswordRequest.getPassword()));
+
+        return userMapper.toUserResponse(userRepository.save(user));
     }
 
 

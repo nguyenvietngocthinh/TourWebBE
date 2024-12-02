@@ -2,6 +2,7 @@ package com.iuh.TourBooking.service;
 
 import com.iuh.TourBooking.models.User;
 import com.iuh.TourBooking.models.dto.request.UserCreateRequest;
+import com.iuh.TourBooking.models.dto.request.UserUpdatePasswordRequest;
 import com.iuh.TourBooking.models.dto.request.UserUpdateRequest;
 import com.iuh.TourBooking.models.dto.response.UserResponse;
 import org.bson.types.ObjectId;
@@ -22,5 +23,7 @@ public interface UserService {
     public UserResponse getMyinfo();
 
     public List<UserResponse> searchUsers(String username, String email, String phoneNumber, int limit);
+
+    public UserResponse updateUserPassword(ObjectId id, UserUpdatePasswordRequest userUpdatePasswordRequest);
 
 }

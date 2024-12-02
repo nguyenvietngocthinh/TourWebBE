@@ -1,6 +1,7 @@
 package com.iuh.TourBooking.controller;
 
 import com.iuh.TourBooking.models.dto.request.UserCreateRequest;
+import com.iuh.TourBooking.models.dto.request.UserUpdatePasswordRequest;
 import com.iuh.TourBooking.models.dto.request.UserUpdateRequest;
 import com.iuh.TourBooking.models.dto.response.ApiResponse;
 import com.iuh.TourBooking.models.dto.response.UserResponse;
@@ -109,5 +110,9 @@ public class UserController{
                 .build();
     }
 
+    @PutMapping("/idpassword/{userId}")
+    private UserResponse updateUserPasswordByUserId(@PathVariable ObjectId userId , @RequestBody UserUpdatePasswordRequest userUpdatePasswordRequest) {
+        return userService.updateUserPassword(userId, userUpdatePasswordRequest);
+    }
 
 }

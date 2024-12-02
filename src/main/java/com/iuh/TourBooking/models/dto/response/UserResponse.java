@@ -20,6 +20,7 @@ public class UserResponse {
     private ObjectId id;
     String phoneNumber;
     String username;
+    String password;
     String email;
     String address;
     Boolean gender;

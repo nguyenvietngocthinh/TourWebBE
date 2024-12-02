@@ -53,4 +53,18 @@ public class CustomerController {
         long totalCustomers = customerService.getTotalCustomers();
         return ResponseEntity.ok(totalCustomers);
     }
+
+    @GetMapping("/searchCustomer")
+    public ApiResponse<List<CustomerResponse>> searchCustomer(
+            @RequestParam(value = "customerName", required = false) String customerName,
+            @RequestParam(value = "customerEmail", required = false) String customerEmail,
+            @RequestParam(value = "customerPhone", required = false) String customerPhone,
+            @RequestParam(value = "limit", defaultValue = "100") int limit) {
+
+        List<CustomerResponse>  customers = customerService.searchCustomers(customerName,customerEmail,customerPhone, limit);
+
+        return ApiResponse.<List<CustomerResponse>>builder()
+                .result(customers)
+                .build();
+    }
 }
