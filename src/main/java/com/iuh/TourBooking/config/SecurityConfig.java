@@ -65,6 +65,7 @@ public class SecurityConfig {
 
     private final String[] PUBLIC_ENDPOINTS_PUT = {
             "/bookings/pendingcancel/**",
+            "/coupons/couponCancel/**",
     };
 
     // Dung de tao token va chong hacker
