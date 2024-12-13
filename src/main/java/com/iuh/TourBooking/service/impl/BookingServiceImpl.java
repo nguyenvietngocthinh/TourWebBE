@@ -236,11 +236,15 @@ public class BookingServiceImpl implements BookingService {
         if (bookingOptional.isPresent()) {
             Booking booking = bookingOptional.get();
 
+            // Định dạng số tiền VNĐ
+            NumberFormat currencyFormatter = NumberFormat.getInstance(new Locale("vi", "VN"));
+            String formattedTotalMoney = currencyFormatter.format(booking.getTotalMoney());
+
             // Tạo nội dung email
             String emailBody = "Thanh toán của bạn đã thành công. Dưới đây là thông tin đặt chỗ của bạn:\n\n" +
                     "Mã đặt chỗ: " + bookingCode + "\n" +
                     "Tên khách hàng: " + booking.getCustomerName() + "\n" +
-                    "Số tiền: " + booking.getTotalMoney() + " VNĐ\n" +
+                    "Số tiền: " + formattedTotalMoney + " VNĐ\n" +
                     "Trạng thái thanh toán: Đã thanh toán";
 
             // Gửi email
