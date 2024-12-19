@@ -51,29 +51,34 @@ public class TourServiceImpl implements TourService {
     @Override
     public TourResponse createTour(TourCreateRequest tourCreateRequest, MultipartFile image) {
 
-// Sinh mã bookingCode và kiểm tra trùng lặp
+        // Sinh mã tourCode và kiểm tra trùng lặp
         String tourCode;
         do {
             tourCode = TourGenerateCode.generateTourCode();
         } while (tourRepository.existsByTourCode(tourCode));
 
-        // Đặt mã bookingCode đã được tạo vào đối tượng booking
+        // Đặt mã tourCode đã được tạo vào đối tượng tourCreateRequest
         tourCreateRequest.setTourCode(tourCode);
 
-        // Initialize tour from request
+        // Khởi tạo tour từ request
         Tour tour = tourMapper.toTour(tourCreateRequest);
 
-
-        // Upload image if available
+        // Upload ảnh nếu có
         String imageUrl = null;
         if (image != null && !image.isEmpty()) {
-            imageUrl = s3Service.uploadFile(image);   // No need to try-catch if uploadFile does not throw IOException
+            imageUrl = s3Service.uploadFile(image);
         }
         tour.setImage(imageUrl);
 
-        // Save tour to DB and return response
-        return tourMapper.toTourResponse(tourRepository.save(tour));
+        // Lưu tour vào DB
+        Tour savedTour = tourRepository.save(tour);
+
+        // Tạo và trả về TourResponse
+        TourResponse tourResponse = tourMapper.toTourResponse(savedTour);
+        tourResponse.setTourCode(tourCode);  // Gán mã tourCode vào response
+        return tourResponse;
     }
+
 
 
 
