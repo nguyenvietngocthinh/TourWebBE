@@ -17,6 +17,7 @@ import com.iuh.TourBooking.repository.TypeTourRepository;
 import com.iuh.TourBooking.service.S3Service;
 import com.iuh.TourBooking.service.TourService;
 import com.iuh.TourBooking.service.TypeTourService;
+import com.iuh.TourBooking.utils.TourGenerateCode;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -50,22 +51,27 @@ public class TourServiceImpl implements TourService {
     @Override
     public TourResponse createTour(TourCreateRequest tourCreateRequest, MultipartFile image) {
 
-        // Kiểm tra mã tour có tồn tại chưa
-        if (tourRepository.existsByTourCode(tourCreateRequest.getTourCode())) {
-                throw new AppException(ErrorCode.TOUR_EXISTED);
-        }
+// Sinh mã bookingCode và kiểm tra trùng lặp
+        String tourCode;
+        do {
+            tourCode = TourGenerateCode.generateTourCode();
+        } while (tourRepository.existsByTourCode(tourCode));
 
-        // Khởi tạo tour từ request
+        // Đặt mã bookingCode đã được tạo vào đối tượng booking
+        tourCreateRequest.setTourCode(tourCode);
+
+        // Initialize tour from request
         Tour tour = tourMapper.toTour(tourCreateRequest);
 
-        // Upload ảnh nếu có
+
+        // Upload image if available
         String imageUrl = null;
         if (image != null && !image.isEmpty()) {
-            imageUrl = s3Service.uploadFile(image);  // Không cần try-catch nếu uploadFile không ném IOException
+            imageUrl = s3Service.uploadFile(image);   // No need to try-catch if uploadFile does not throw IOException
         }
         tour.setImage(imageUrl);
 
-        // Lưu tour vào DB và trả về response
+        // Save tour to DB and return response
         return tourMapper.toTourResponse(tourRepository.save(tour));
     }
 
