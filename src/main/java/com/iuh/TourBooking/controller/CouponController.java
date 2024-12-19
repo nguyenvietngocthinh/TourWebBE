@@ -54,9 +54,10 @@ public class CouponController {
     public ApiResponse<List<CouponResponse>> searchCoupons(
             @RequestParam(value = "codeCoupon", required = false) String codeCoupon,
             @RequestParam(value = "discount", required = false) int discount,
+            @RequestParam(value = "description", required = false) String description,
             @RequestParam(value = "limit", defaultValue = "10") int limit) {
 
-        List<CouponResponse>  coupons = couponService.searchCoupons(codeCoupon,discount ,limit);
+        List<CouponResponse>  coupons = couponService.searchCoupons(codeCoupon,discount ,description,limit);
 
         return ApiResponse.<List<CouponResponse>>builder()
                 .result(coupons)

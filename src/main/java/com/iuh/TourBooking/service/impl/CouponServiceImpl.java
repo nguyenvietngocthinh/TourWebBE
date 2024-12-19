@@ -113,7 +113,7 @@ public class CouponServiceImpl implements CouponService {
 //    }
 
     @Override
-    public List<CouponResponse> searchCoupons(String codeCoupon, int discount, int limit) {
+    public List<CouponResponse> searchCoupons(String codeCoupon, int discount,String description, int limit) {
         // Tạo query với các điều kiện lọc
         Query query = new Query();
 
@@ -125,6 +125,10 @@ public class CouponServiceImpl implements CouponService {
         // Nếu discount được cung cấp, tìm kiếm theo discount
         if (discount > 0) {
             query.addCriteria(Criteria.where("discount").is(discount));  // Tìm kiếm theo giá trị discount
+        }
+
+        if (description != null && !description.isEmpty()) {
+            query.addCriteria(Criteria.where("description").regex(description, "i"));  // Tìm kiếm theo codeCoupon (không phân biệt chữ hoa/thường)
         }
 
         // Giới hạn số lượng kết quả trả về
