@@ -53,16 +53,22 @@ public class CouponController {
     @GetMapping("/searchCoupon")
     public ApiResponse<List<CouponResponse>> searchCoupons(
             @RequestParam(value = "codeCoupon", required = false) String codeCoupon,
-            @RequestParam(value = "discount", required = false) int discount,
+            @RequestParam(value = "discount", required = false) Integer discount,
             @RequestParam(value = "description", required = false) String description,
             @RequestParam(value = "limit", defaultValue = "10") int limit) {
 
-        List<CouponResponse>  coupons = couponService.searchCoupons(codeCoupon,discount ,description,limit);
+        List<CouponResponse> coupons = couponService.searchCoupons(
+                (codeCoupon != null && !codeCoupon.trim().isEmpty()) ? codeCoupon : null,
+                discount != null ? discount : 0,  // Gán giá trị mặc định nếu null
+                (description != null && !description.trim().isEmpty()) ? description : null,
+                limit
+        );
 
         return ApiResponse.<List<CouponResponse>>builder()
                 .result(coupons)
                 .build();
     }
+
 
     @PutMapping("/couponCancel/{codeCoupon}")
     public ApiResponse<CouponResponse> updateCouponToCancel(

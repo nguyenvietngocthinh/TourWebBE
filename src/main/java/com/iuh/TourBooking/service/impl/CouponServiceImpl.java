@@ -113,7 +113,7 @@ public class CouponServiceImpl implements CouponService {
 //    }
 
     @Override
-    public List<CouponResponse> searchCoupons(String codeCoupon, int discount,String description, int limit) {
+    public List<CouponResponse> searchCoupons(String codeCoupon, Integer discount,String description, int limit) {
         // Tạo query với các điều kiện lọc
         Query query = new Query();
 
